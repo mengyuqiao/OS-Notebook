@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.9.24)  25 SEP 2021 14:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.9.24)  25 SEP 2021 20:20
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -277,40 +277,52 @@ LaTeX Info: Redefining \nameref on input line 19.
 \openout4 = `Notebook.toc'.
 
  [2]
-<./images//WhyDoWeNeedOS.png, id=67, 791.95876pt x 410.53375pt>
+<./images//WhyDoWeNeedOS.png, id=137, 791.95876pt x 410.53375pt>
 File: ./images//WhyDoWeNeedOS.png Graphic file (type png)
 <use ./images//WhyDoWeNeedOS.png>
 Package pdftex.def Info: ./images//WhyDoWeNeedOS.png  used on input line 48.
 (pdftex.def)             Requested size: 390.0pt x 202.17183pt.
  [3 <./images//WhyDoWeNeedOS.png>]
-<./images//FourWaysToInvokeOS.png, id=75, 584.1825pt x 481.8pt>
+<./images//FourWaysToInvokeOS.png, id=145, 584.1825pt x 481.8pt>
 File: ./images//FourWaysToInvokeOS.png Graphic file (type png)
 <use ./images//FourWaysToInvokeOS.png>
 Package pdftex.def Info: ./images//FourWaysToInvokeOS.png  used on input line 67.
 (pdftex.def)             Requested size: 312.00119pt x 257.33037pt.
  [4]
-<./images//InterfacesInComputerSystem.png, id=80, 410.53375pt x 467.7475pt>
+<./images//InterfacesInComputerSystem.png, id=150, 410.53375pt x 467.7475pt>
 File: ./images//InterfacesInComputerSystem.png Graphic file (type png)
 <use ./images//InterfacesInComputerSystem.png>
 Package pdftex.def Info: ./images//InterfacesInComputerSystem.png  used on input line 79.
 (pdftex.def)             Requested size: 234.00238pt x 266.6117pt.
- [5 <./images//FourWaysToInvokeOS.png>] [6 <./images//InterfacesInComputerSystem.png>] [7] (./Notebook.aux)
+ [5 <./images//FourWaysToInvokeOS.png>] [6 <./images//InterfacesInComputerSystem.png>] [7]
+<./images//ProcessMemoryLayout.png, id=167, 981.6675pt x 428.60126pt>
+File: ./images//ProcessMemoryLayout.png Graphic file (type png)
+<use ./images//ProcessMemoryLayout.png>
+Package pdftex.def Info: ./images//ProcessMemoryLayout.png  used on input line 128.
+(pdftex.def)             Requested size: 390.0pt x 170.27335pt.
+ [8 <./images//ProcessMemoryLayout.png>]
+<./images//ProcessLifecycle.png, id=173, 852.18375pt x 262.9825pt>
+File: ./images//ProcessLifecycle.png Graphic file (type png)
+<use ./images//ProcessLifecycle.png>
+Package pdftex.def Info: ./images//ProcessLifecycle.png  used on input line 144.
+(pdftex.def)             Requested size: 390.0pt x 120.35544pt.
+ [9 <./images//ProcessLifecycle.png>] [10] [11] (./Notebook.aux)
 Package rerunfilecheck Info: File `Notebook.out' has not changed.
-(rerunfilecheck)             Checksum: 09223AC90FC96B03446AD4A659AB286F;1191.
+(rerunfilecheck)             Checksum: FBB4A4ACEB70726A94E31FFA6D17776D;2914.
  ) 
 Here is how much of TeX's memory you used:
- 8556 strings out of 478599
- 127592 string characters out of 5852089
- 431311 words of memory out of 5000000
- 26313 multiletter control sequences out of 15000+600000
+ 8609 strings out of 478599
+ 128656 string characters out of 5852089
+ 436322 words of memory out of 5000000
+ 26342 multiletter control sequences out of 15000+600000
  410060 words of font info for 50 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 60i,6n,66p,326b,395s stack positions out of 5000i,500n,10000p,200000b,80000s
-{e:/Environment/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on Notebook.pdf (7 pages, 163630 bytes).
+ 60i,6n,66p,326b,445s stack positions out of 5000i,500n,10000p,200000b,80000s
+{e:/Environment/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on Notebook.pdf (11 pages, 288753 bytes).
 PDF statistics:
- 123 PDF objects out of 1000 (max. 8388607)
- 99 compressed objects within 1 object stream
- 19 named destinations out of 1000 (max. 500000)
- 96 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 228 PDF objects out of 1000 (max. 8388607)
+ 193 compressed objects within 2 object streams
+ 41 named destinations out of 1000 (max. 500000)
+ 218 words of extra memory for PDF output out of 10000 (max. 10000000)
 

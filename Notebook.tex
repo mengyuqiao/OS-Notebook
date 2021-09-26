@@ -93,4 +93,108 @@ Why do we need an OS?
     \item First programmer: Ada Lovelace
 \end{itemize}
 
+\section{Processes}
+\subsection{Process}
+\subsubsection{What?}
+What is a process?
+\begin{itemize}
+    \item A process is a program in execution. A program is a set of instructions somewhere (like the disk).
+    \item Once created, a process continuously does the following: \begin{itemize}
+        \item {\bfseries Fetches} an instruction from memory. 
+        \item {\bfseries Decodes} it. i.e., figures out which instruction this is. 
+        \item {\bfseries Executes} it. it does the thing that it is supposed to do, like add two numbers together, access memory, check a condition, jump to a function, and so forth.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Process versus Program}
+How is a process different from a program?
+\begin{itemize}
+    \item Program: A passive entity stored in the disk, has static code and static data.
+    \item Process: Actively executing code and the associated static and dynamic data.
+    \item Program is just one component of a process.
+    \item There can be multiple process instances of the same program
+\end{itemize}
+
+\subsubsection{Constitution}
+\begin{itemize}
+    \item Memory space
+    \item Procedure call stack
+    \item Registers and counters
+    \item Open files, connections
+    \item And more.
+\end{itemize}
+
+\subsubsection{Memory layout}
+\includegraphics[width=1.0\textwidth]{ProcessMemoryLayout.png}
+In this picture, Stack and Heap grow toward each other, that's because every process has a limited amount of space, thus let heap and stack grow toward each other from two direction can make the best use of space.
+
+\subsection{System calls}
+\begin{itemize}
+    \item fork(): create new process. {\bfseries called once but return twice}. Usage: \begin{itemize}
+        \item User runs a program at command line
+        \item OS creates a process to provide a service: Check the directory /etc/init.d/ on Linux for scripts that start off different services at boot time.
+        \item One process starts another process: For example in servers
+    \end{itemize}
+    \item exec(): execute a file. {\bfseries replaces the process’ memory with a new program image. All I/O descriptors open before exec stay open after exec}.
+    \item wait()/waitpid(): wait for child process.
+    \item exit(): terminate a process
+\end{itemize}
+
+\subsection{Lifecycle}
+\includegraphics[width=1.0\textwidth]{ProcessLifecycle.png}
+\begin{itemize}
+    \item Ready (runnable; temporarily stopped to let another process run)\begin{itemize}
+        \item Process is ready to execute, but not yet executing 
+        \item Its waiting in the scheduling queue for the CPU scheduler to pick it up. 
+    \end{itemize}
+    \item Running:  (actually using the CPU at that instant) 
+    \item Blocked (unable to run until some external event happens).\begin{itemize}
+        \item Process is waiting (sleeping) for some event to occur. 
+        \item Once the event occurs, process will be woken up, and placed on the scheduling queue
+    \end{itemize}
+\end{itemize}
+
+\begin{enumerate}
+    \item Running {$\to$} Blocked: Occurs when the operating system discovers that a process cannot continue right now.
+    \item Running {$\to$} Ready: Occurs when the scheduler decides that the running process has run long enough and it is time to let another process have some CPU time.
+    \item Ready {$\to$} Running: Occurs when all the other processes have had their fair share and it is time for the first process to get the CPU to run again.
+    \item Blocked {$\to$} Ready: Occurs when the external event for which a process was waiting (such as the arrival of some input) happens
+\end{enumerate}
+
+
+\subsection{Special Process}
+\begin{itemize}
+    \item Orphan process \begin{itemize}
+        \item When a parent process dies, child process becomes an orphan process
+        \item The init process (pid = 1) becomes the parent of the orphan processes
+    \end{itemize}
+    \item Zombie process \begin{itemize}
+        \item When a child dies, a SIGCHLD signal is sent to the OS, If parent doesn’t wait()on the child, and child exit()s, it becomes a zombie.
+        \item Zombies hang around till parent calls wait() or waitpid().
+        \item Zombies take up no system resources, it's just a integer status kept in the OS.
+        \item Ways to prevent a child process from becoming a zombie: \begin{itemize}
+            \item Parent call wait()/waitpid() before child process exit()
+            \item Child parent sleep() before exit() until parent process give it a message.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\subsection{Cold-start Penalty}
+\subsection{Context Switch}
+
+\section{Inter-Process Communication}
+\subsection{Overview}
+Inter-Process Communication mechanisms
+\begin{itemize}
+    \item Pipe: 
+    \item Signals: Event notification from one process to another
+    \item Shared momery: Common piece of read/write memory, needs authorization for access
+    \item Parent-child: Command-line arguments, including waitpid(), wait(), exit()
+    \item Reading/modifying common files
+    \item Semaphores: Locking and event signaling mechanism between processes
+    \item Sockets: Not just across the network, but also between processes
+\end{itemize}
+
+\subsection{Pipe}
+
 \end{document}
