@@ -9,6 +9,29 @@
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
 
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
 
 \usepackage[utf8]{inputenc}
 
@@ -175,6 +198,7 @@ In this picture, Stack and Heap grow toward each other, that's because every pro
         \item Ways to prevent a child process from becoming a zombie: \begin{itemize}
             \item Parent call wait()/waitpid() before child process exit()
             \item Child parent sleep() before exit() until parent process give it a message.
+            \item Set act.sa\_flags is SA\_NOCLDWAIT
         \end{itemize}
     \end{itemize}
 \end{itemize}
@@ -196,5 +220,354 @@ Inter-Process Communication mechanisms
 \end{itemize}
 
 \subsection{Pipe}
+\subsubsection{Abstraction}
+Write to one end, read from another.
+\newline
+\includegraphics[width=0.8\textwidth]{PipeAbstraction.png}
+\subsubsection{Parent-Child Communication Using Pipe}
+\includegraphics[width=0.8\textwidth]{ParentChildCommunicationUsingPipe.png}
+\subsubsection{File-Descriptor Table}
+\begin{itemize}
+    \item Each process has a file-descriptor table
+    \item One entry for each open file
+    \item File includes regular file, stdin, stdout, pipes, etc.
+\end{itemize}
+\includegraphics[width=0.8\textwidth]{FileDescriptorTable.png}
+\subsubsection{Redirect Std to a File}
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+int main()
+{
+    int fds[2];
+    char buf[30];
+    pid_t pid1, pid2, pid;
+    int status, i;
+
+    /* create a pipe */
+    if (pipe(fds) == -1) {
+        perror("pipe");
+        exit(1);
+    }
+
+    /* fork first child */
+    if ( (pid1 = fork()) < 0) {
+        perror("fork");
+        exit(1);
+    }
+
+    if ( pid1 == 0 ) {
+        close(1);  /* close normal stdout (fd = 1) */
+        dup2(fds[1], 1);   /* make stdout same as fds[1] */
+        close(fds[0]); /* we don't need the read end -- fds[0] */
+
+        if( execlp("ps", "ps", "-elf", (char *) 0) < 0) {
+            perror("Child");
+            exit(0);
+        }
+
+	/* control never reaches here */
+    } 
+
+    /* fork second child */
+    if ( (pid2 = fork()) < 0) {
+	perror("fork");
+	exit(1);
+    }
+
+    if ( pid2 == 0 ) {
+        close(0);   /* close normal stdin (fd = 0)*/
+        dup2(fds[0],0);   /* make stdin same as fds[0] */
+        close(fds[1]); /* we don't need the write end -- fds[1]*/
+
+        if( execlp("less", "less", (char *) 0) < 0) {
+            perror("Child");
+            exit(0);
+        }
+
+	/* control never reaches here */
+    }
+
+    /* parent doesn't need fds  - MUST close - WHY? */
+    /* The reading side is supposed to learn that the writer has finished if it notices an EOF condition. This can only happen if all writing sides are closed.*/
+    /* close its reading end (for not wasting FDs and for proper detection of dying reader)*/
+    /* close its writing end (in order to be possible to detect the EOF condition).*/
+    close(fds[0]); 
+    close(fds[1]); 
+
+    /* parent waits for children to complete */
+    for( i=0; i<2; i++) {
+	pid = wait(&status);
+	printf("Parent: Child %d completed with status %d\n", pid, status);
+    }
+
+}
+
+\end{lstlisting}
+\subsubsection{Handling Chain of Filters Using Pipe}
+\emph{command 1 $|$ command 2 $|$ … $|$ command N}
+\begin{itemize}
+    \item First command? \begin{itemize}
+        \item Yes: continue
+        \item No: redirect stdin to previous pipe
+    \end{itemize}
+    \item Last command? \begin{itemize}
+        \item Yes: Output
+        \item No: \begin{itemize}
+            \item create next pipe (if needed)
+            \item redirect stdout to next pipe
+            \item fork a child for next level of recursion with one command less as input
+        \end{itemize}
+    \end{itemize}
+    \item exec the command for the current level
+\end{itemize}
+\subsubsection{Byte-stream versus Message}
+\begin{itemize}
+    \item Byte-Stream abstraction: Pipe \begin{itemize}
+        \item Can read and write at arbitrary byte boundaries
+        \item Don't need to return explicit bytes of data. \emph{read(fds[0], buf, 6)} \begin{itemize}
+            \item read() could reach end of input stream (EOF).
+            \item Other endpoint may abruptly close the connection
+            \item read() could return on a signal
+        \end{itemize}
+    \end{itemize}
+    \item Message abstraction: Provides explicit message boundaries.
+\end{itemize}
+\subsubsection{Error Handling}
+We must incorporate error handling with every I/O call (actually with any system call)
+\begin{itemize}
+    \item First check the return value of every read(…)/write(…) system call
+    \item Then \begin{itemize}
+        \item Wait to read/write more data
+        \item Handle any error conditions
+    \end{itemize}
+\end{itemize}
+\includegraphics[width=0.8\textwidth]{PipeErrorHandling.png}
+
+\subsection{Signals}
+\subsubsection{Overview}
+\begin{itemize}
+    \item A notification to a process that an event has occurred, comes from OS or another process
+    \item The type of event determined by the type of signal
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{SignalOverview.png}
+\subsubsection{Handling Signals}
+\begin{itemize}
+    \item Signals can be {\bfseries caught} – i.e. an action (or handler) can be associated with them
+    \item Actions can be customized using /emph{sigaction()}, which associates a signal handler with the signal
+    \item {\bfseries Default} action for most signals is to \underline{terminate the process}. Except SIGCHLD and SIGURG are ignored by default
+    \item Unwanted signals can be {\bfseries ignored}, except SIGKILL or SIGSTOP
+\end{itemize}
+\subsubsection{SIGCHLD}
+\begin{itemize}
+    \item Sent to parent when a child process terminates or stops
+    \item If act.sa\_handler is SIG\_IGN, SIGCHLD will be ignored (default behavior)
+    \item If act.sa\_flags is SA\_NOCLDSTOP, SIGCHLD won't be generated when children stop
+    \item If act.sa\_flags is SA\_NOCLDWAIT, children of the calling process will not be transformed into zombies when they terminate
+    \item These need to be set in sigaction() before parent calls fork()
+\end{itemize}
+Usage: handling child's exit without blocking on wait()
+\begin{itemize}
+    \item Parent could install a signal handler for SIGCHLD
+    \item Call wait(…)/waitpid(…)inside the signal handler \begin{lstlisting}
+        // sigchild.c
+        void handle_sigchld(int signo) {
+            pid_t pid;
+            int stat;
+ 
+            pid = wait(&stat); //returns without blocking 
+            printf("child process exits.");
+        }
+        \end{lstlisting}
+\end{itemize}
+
+\subsection{Shared Memory}
+\subsubsection{Overview}
+Common chunk of read/write memory among processes.
+\newline
+\includegraphics[width=0.8\textwidth]{SharedMemoryOverview.png}
+\subsubsection{Creating}
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+#define SHM_SIZE 1024  /* make it a 1K shared memory segment */
+
+int main(void)
+{
+
+       key_t key;
+       int shmid;
+       char *data;
+       int mode;
+
+       /* make the key: */
+       /* The ftok() function uses the identity of the file named by the given pathname (which must refer to an existing, accessible file) and the least significant 8 bits of proj_id (which must be nonzero) to generate a key_t type System V IPC key, suitable for use with msgget(2), semget(2), or shmget(2). */
+       /* The resulting value is the same for all pathnames that name the same file, when the same value of proj_id is used.  The value returned should be different when the (simultaneously existing) files or the project IDs differ.*/
+       if ((key = ftok("test_shm", 'X')) < 0) {
+            perror("ftok");
+            exit(1);
+       }
+
+       /* create the shared memory segment: */
+       /* shmget() returns the identifier of the System V shared memory segment associated with the value of the argument key.  It may be used either to obtain the identifier of a previously created shared memory segment (when shmflg is zero and key does not have the value IPC_PRIVATE), or to create a new set.*/
+       /* A new shared memory segment, with size equal to the value of size rounded up to a multiple of PAGE_SIZE, is created if key has the value IPC_PRIVATE or key isn't IPC_PRIVATE, no shared memory segment corresponding to key exists, and IPC_CREAT is specified in shmflg.*/
+       /* If shmflg specifies both IPC_CREAT and IPC_EXCL and a shared memory segment already exists for key, then shmget() fails with errno set to EEXIST.  (This is analogous to the effect of the combination O_CREAT | O_EXCL for open(2).) */
+       /* 0644 means permissions of owner, group and user */
+       if ((shmid = shmget(key, SHM_SIZE, 0644 | IPC_CREAT | IPC_EXCL )) < 0) {
+            perror("shmget");
+            exit(1);
+       }
+
+       return(0);
+}
+\end{lstlisting}
+\subsubsection{Attach and Detach}
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+#define SHM_SIZE 1024  /* make it a 1K shared memory segment */
+
+int main(int argc, char *argv[])
+{
+
+       key_t key;
+       int shmid;
+       char *data;
+       int mode;
+
+
+       /* make the key: */
+       if ((key = ftok("test_shm", 'X')) == -1) {
+            perror("ftok");
+            exit(1);
+       }
+
+
+       /* connect to the segment. */
+	   /* There's no IPC_CREATE. Because if there was one this function would create a new shared memory.*/
+       if ((shmid = shmget(key, SHM_SIZE, 0644)) == -1) {
+            perror("shmget");
+            exit(1);
+       }
+
+
+	    /* attach to the segment to get a pointer to it: */
+        /* The shmat() function attaches the shared memory segment associated with the shared memory identifier specified by shmid to the address space of the calling process.*/
+        data = shmat(shmid, (void *)0, 0);
+        if (data == (char *)(-1)) {
+            perror("shmat");
+            exit(1);
+        }
+
+
+        /* read or modify the segment, based on the command line: */
+        if (argc == 2) {
+            printf("writing to segment: \"%s\"\n", argv[1]);
+            strncpy(data, argv[1], SHM_SIZE);
+        } else
+            printf("segment contains: \"%s\"\n", data);
+
+
+        /* detach from the segment: */
+        if (shmdt(data) == -1) {
+            perror("shmdt");
+            exit(1);
+        }
+
+       return(0);
+}
+\end{lstlisting}
+\subsubsection{Deleting}
+\begin{lstlisting}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+
+#define SHM_SIZE 1024  /* make it a 1K shared memory segment */
+
+int main(void)
+{
+       key_t key;
+       int shmid;
+       char *data;
+       int mode;
+
+       /* make the key: */
+       if ((key = ftok("test_shm", 'X')) == -1) {
+            perror("ftok");
+            exit(1);
+       }
+
+       /* connect to memory segment: */
+       if ((shmid = shmget(key, SHM_SIZE, 0644)) == -1) {
+            perror("shmget");
+            exit(1);
+       }
+
+       /* delete he segment */
+       /* IPC_RMID: Remove the shared memory identifier specified by shmid from the system and destroy the shared memory segment and shmid_ds data structure associated with it. IPC_RMID can only be executed by a process that has an effective user ID equal to either that of a process with appropriate privileges or to the value of shm_perm.cuid or shm_perm.uid in the shmid_ds data structure associated with shmid.*/
+       if( shmctl(shmid, IPC_RMID, NULL) == -1) {
+            perror("shmctl");
+            exit(1);
+       }
+
+       return(0);
+}
+\end{lstlisting}
+\subsubsection{Command}
+\begin{itemize}
+    \item ipcs: Lists all IPC objects owned by the user 
+    \item ipcrm: Removes specific IPC object
+\end{itemize}
+
+\section{Threads}
+
+\section{Concurrency}
+\subsection{Overview}
+\begin{itemize}
+    \item Sequential: one after another(two tasks executed on one CPU one after another)
+    \item Concurrent: "juggling" many things within a time window(two tasks share a single CPU over time)
+    \item Parallel: do many things simultaneously(two threads executing on two different CPUs simultaneously)
+\end{itemize}
+\includegraphics[width=0.8\textwidth]{ConcurrencyOverview.png}
+\newline
+Concurrent tasks must be either
+\begin{itemize}
+    \item execute independently
+    \item synchronize the shared resource \begin{itemize}
+        \item Shared memory
+        \item Pipes
+        \item Signals
+    \end{itemize}
+\end{itemize}
+\subsection{Critical Section}
+\begin{itemize}
+    \item Definition: A section of code in a concurrent task that {\bfseries modifies or accesses} a resource shared with another task.
+    \item Example: A piece of code that reads from or writes to a shared memory region
+\end{itemize}
+\subsection{Race Condition and Deadlocks}
+\begin{itemize}
+    \item Race Condition: Incorrect behavior of a program due to concurrent execution of critical sections by two or more threads
+    \item Deadlocks: When two or more processes stop making progress {\bfseries indefinitely} because they are all waiting for each other to do something
+\end{itemize}
+\subsection{Race Conditions and Locking}
+
 
 \end{document}
