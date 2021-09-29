@@ -538,6 +538,188 @@ int main(void)
 \end{itemize}
 
 \section{Threads}
+\subsection{Problem}
+Want to do multiple tasks Concurrently
+\begin{itemize}
+    \item Start two processes \begin{itemize}
+        \item fork() is expensive
+        \item cold-start penalty
+    \end{itemize}
+\end{itemize}
+Processes may need to talk to each other
+\begin{itemize}
+    \item Two different address spaces, so we need to use IPC \begin{itemize}
+        \item kernel transitions are expensive
+        \item May need to copy data from a user to kernel to another user
+        \item Inter-process Shared memory is a pain to set up
+    \end{itemize}
+\end{itemize}
+\subsection{Solution}
+\subsubsection{Event-driven programming}
+\begin{itemize}
+    \item Make one process do all the tasks 
+    \item Busy loop polls for events and executes tasks for each event 
+    \item No IPC needed 
+    \item {\bfseries Length of the busy loop} determines response latency 
+    \item Stateful event responses complicate the code
+\end{itemize}
+\begin{lstlisting}
+while(1) 
+{ 
+    Check pending events; 
+    if (event 1) do task 1; 
+    if (event 2) do task 2; 
+    // ...
+    if (event N) do task N; 
+}
+\end{lstlisting}
+\subsubsection{Threads}
+Multiple threads of execution per process
+\subsection{Threads}
+Shared Resource
+\begin{itemize}
+    \item virtual address space(code, heap and static data)
+    \item Open descriptors (files, sockets etc)
+    \item Signals and Signal handlers
+\end{itemize}
+Non-Shared resources
+\begin{itemize}
+    \item Program counter
+    \item Stack, stack pointer
+    \item Registers
+    \item Thread ID 
+    \item Errno 
+    \item Priority
+\end{itemize}
+\subsubsection{Address space layout}
+\includegraphics[width=\textwidth]{ThreadAddressSpace.png}
+\subsubsection{Advantages}
+\begin{itemize}
+    \item Lower inter-thread context switching overhead than processes 
+    \item No Inter-process communication \begin{itemize}
+        \item Zero data transfer cost between threads 
+        \item Only need inter-thread synchronization 
+    \end{itemize}
+    \item Threads can be pre-empted at any point \begin{itemize}
+        \item Long-running threads are OK 
+        \item As opposed to event-driven tasks that must be short. 
+    \end{itemize}
+    \item Threads can exploit parallelism, but it depends…more later 
+    \item Threads could block without blocking other threads, but it depends … more later 
+\end{itemize}
+\subsubsection{Disadvantages}
+\begin{itemize}
+    \item Shared State! \begin{itemize}
+        \item Global variables are shared between threads. 
+        \item Accidental data changes can cause errors. 
+    \end{itemize}
+    \item Threads and signals don’t mix well \begin{itemize}
+        \item Common signal handler for all threads in a process 
+        \item Which thread to signal? Everybody! 
+        \item Royal pain to program correctly. 
+    \end{itemize}
+    \item Lack of robustness. Crash in one thread will crash the entire process. 
+    \item Some library functions may not be thread-safe \begin{itemize}
+        \item Library Functions that return pointers to static internal memory. E.g. gethostbyname() 
+        \item Less of a problem these days.
+    \end{itemize}
+\end{itemize}
+\subsubsection{Types of Threads}
+User-level threads
+\begin{itemize}
+    \item User-level libraries provide multiple threads,
+    \item OS kernel does not recognize user-level threads
+    \item Threads execute when the process is scheduled
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{UserLevelThreads.png}
+\newline
+Kernel-level threads
+\begin{itemize}
+    \item OS kernel provides multiple threads per process
+    \item Each thread is scheduled independently by the kernel’s CPU scheduler
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{KernelLevelThreads.png}
+\newline
+Hybrid Implementations
+\newline
+\includegraphics[width=0.6\textwidth]{MultiplexingThreads.png}
+\newline
+Multiplexing user-level threads within each kernel- level threads
+\subsubsection{Scheduling}
+Local Thread Scheduling
+\newline
+\includegraphics[width=0.6\textwidth]{LocalThreadScheduling.png}
+\begin{itemize}
+    \item Next thread is picked from among the threads belonging to the \emph{current process}
+    \item Each process gets a timeslice from kernel
+    \item Then the timeslice is \emph{divided up} among the threads within the current process 
+    \item Local scheduling can be implemented with either Kernel-level Threads or user-level threads
+    \item Scheduling decision requires only \emph{local knowledge} of threads within the current process.
+\end{itemize}
+Global Thread Scheduling
+\newline
+\includegraphics[width=0.6\textwidth]{GlobalThreadScheduling.png}
+\begin{itemize}
+    \item Next thread to be scheduled is picked up from \emph{ANY} process in the system. 
+    \item Timeslice is allocated at the granularity of threads 
+    \item Global scheduling can be implemented only with kernel-level threads: for Picking the next thread requires global knowledge of threads in all processes.
+\end{itemize}
+\subsubsection{Thread Creation and Termination}
+\begin{itemize}
+    \item Creation \begin{lstlisting}
+        int pthread_create( pthread_t * thread, pthread_attr_t * attr,
+        void * (*start_routine)(void *), void * arg);
+    \end{lstlisting}
+    \item Two ways to perform thread termination \begin{itemize}
+        \item Return from initial function \begin{lstlisting}
+            void pthread_exit(void * status)
+        \end{lstlisting}
+    \end{itemize}
+    \item Waiting for child thread in parent \begin{itemize}
+        \begin{lstlisting}
+            pthread_join()
+        \end{lstlisting}
+        \item equivalent to waitpid
+    \end{itemize}
+\end{itemize}
+\subsubsection{Code}
+Example
+\begin{lstlisting}
+    // shared counter to be incremented by each thread
+    int counter = 0;
+    main()
+    {
+        pthread_t tid[N];
+        for (i=0;i<N;i++) {
+            /*Create a thread in thread_func routine*/
+            Pthread_create(&tid[i], NULL, thread_func, NULL);
+        }
+        for(i=0;i<N;i++) {
+            /* wait for child thread */
+            Pthread_join(tid[i], NULL);
+        }
+        void *thread_func(void *arg)
+        {
+            /* unprotected code race condition */
+            counter = counter + 1;
+        }
+        return NULL; // thread dies upon return
+    }
+\end{lstlisting}
+\subsubsection{pthread Synchronization Operations}
+\begin{lstlisting}
+    // Mutex operation
+    pthread_mutex_init()
+    pthread_mutex_lock()
+    pthread_mutex_unlock ()
+    pthread_mutex_trylock ()
+
+    // Condition variables
+    pthread_cond_wait ()
+    pthread_cond_signal ()
+    pthread_cond_broadcast ()
+    pthread_cond_timedwait ()
+\end{lstlisting}
 
 \section{Concurrency}
 \subsection{Overview}
@@ -567,7 +749,115 @@ Concurrent tasks must be either
     \item Race Condition: Incorrect behavior of a program due to concurrent execution of critical sections by two or more threads
     \item Deadlocks: When two or more processes stop making progress {\bfseries indefinitely} because they are all waiting for each other to do something
 \end{itemize}
-\subsection{Race Conditions and Locking}
+\subsubsection{Mutual Exclusion}
+Don’t allow two or more processes to execute their critical sections concurrently (on the same resource)
+\newline
+\includegraphics[width=0.8\textwidth]{MutualExclusionOverview.png}
+\subsubsection{Conditions for correct mutual exclusion}
+\begin{itemize}
+    \item No two processes are simultaneously in the critical section 
+    \item No assumptions are made about speeds or numbers of CPUs 
+    \item No process must wait forever to enter its critical section. Waiting forever indicates a \emph{deadlock}
+    \item No process running outside its critical region may block another process running in the critical section
+\end{itemize}
+The first two conditions are  enforced by the operating system’s implementation of locks, but the other two conditions have to be ensured by the programmer using the locks.
+\subsubsection{Typs of Locks}
+\begin{itemize}
+    \item Blocking locks \begin{itemize}
+        \item Give up CPU till lock becomes available \begin{lstlisting}
+while(lock unavailable)
+    yield CPU to others; // or block till lock available        
+return success;
+            \end{lstlisting}
+        \item Usage: \begin{lstlisting}
+Lock(resource); // Claim a shared resource
+Execute Critical Section;//access or modify the shared resource
+Unlock(resource); // unclaim shared resource
+        \end{lstlisting}
+        \item Advantage: Simple to use. Locking always succeeds…ultimately
+        \item Disadvantage: Blocking duration may be indefinite \begin{itemize}
+            \item Process is moved out of “Running” state to “Blocked” state, and return to running will cost much resource
+            \item Delay in getting back to running state if lock becomes available soon after blocking
+        \end{itemize}
+    \end{itemize}
+    \item Non-blocking locks \begin{itemize}
+        \item Don’t block if lock is unavailable \begin{lstlisting}
+if(lock unavailable)
+    return failure;
+else
+    return success
+        \end{lstlisting}
+        \item Usage \begin{lstlisting}
+if(TryLock(resource) == success)
+    Execute Critical Section;
+    Unlock(resource);
+else
+    Do something else; // plan B
+        \end{lstlisting}
+        \item Advantage: No unbounded blocking
+        \item Disadvantage: Need a “plan B” to handle locking failure
+    \end{itemize}
+    \item Spin locks \begin{itemize}
+        \item Don’t block. Instead, constantly poll the lock for availability \begin{lstlisting}
+while (lock is unavailable) 
+continue; // try again
+return success;
+        \end{lstlisting}
+        \item Usage: Just like blocking locks \begin{lstlisting}
+SpinLock(resource);
+Execute Critical Section;
+SpinUnlock(resource);
+        \end{lstlisting}
+        \item Advantage: Very efficient with short critical sections, if you expect a lock to be released quickly
+        \item Disadvantage: \begin{itemize}
+            \item Doesn’t yield the CPU and wastes CPU cycles, Bad if critical sections are long: P1 is in the ready queue, but P2 is doing spin with CPU until scheduler interrupts it and give CPU to P1
+            \item Efficient only if machine has multiple CPUs
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+\subsubsection{Best practices for locking}
+\begin{itemize}
+    \item {\bfseries Associate locks with shared resources, NOT code.}
+    \item {\bfseries Guard each shared resource by a separate lock.}
+    \item {\bfseries OS cannot enforce these properties}
+\end{itemize}
+\subsubsection{Deadlock Solution}
+Deadlock can only be prevented, once it happens, programmers can't solve it by killing the process or enforcing the process to give up the lock.
+\newline
+Right Solution: Lock Ordering
+\begin{itemize}
+    \item Sort the locks in a fixed order (say L1 followed by L2) 
+    \item Always acquire subset of locks in the sorted order.
+\end{itemize}
+\subsubsection{Priority Inversion}
+Conditions
+\begin{itemize}
+    \item static priority system
+    \item synchronization between processes
+\end{itemize}
+Example
+\begin{itemize}
+    \item Definition: \begin{itemize}
+        \item Ph – High priority 
+        \item Pm – Medium priority 
+        \item Pl – Low priority
+    \end{itemize}
+    \item Procedure \begin{itemize}
+        \item Pl acquires a lock L 
+        \item Pl starts executing critical section 
+        \item Ph tries to acquire lock L and blocks 
+        \item Pm becomes “ready” and preempts Pl from the CPU. 
+        \item Pl might never exit critical section if Pm keeps preempting Pl
+        \item So Ph might never enter critical section
+    \end{itemize}
+    \item Problem: A high priority process Ph is blocked waiting for a low priority process Pl, Pl cannot proceed because a medium priority process Pm is executing
+    \item Solution: Priority Inheritance \begin{itemize}
+        \item Temporarily increase the priority of Pl to HIGH PRIORITY 
+        \item Pl will be scheduled and will exit critical section quickly 
+        \item Then Ph can execute
+    \end{itemize}
+\end{itemize}
+
 
 
 \end{document}
