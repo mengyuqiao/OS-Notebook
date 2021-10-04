@@ -71,13 +71,13 @@ Why do we need an OS?
 \includegraphics[width=1.0\textwidth]{WhyDoWeNeedOS.png}
 
 \subsection{How}
-\subsubsection{Virtulization}
+\subsubsection{Virtualization}
 \begin{itemize}
     \item Definition: OS takes a physical resource (such a sthe processor, or memory, or a disk) and transforms it into a more general, powerful, and easy-to-use virtual form of itself.
-    \item Resource Virtulization \begin{itemize}
-        \item Many(virtual)-to-one(physical): CPU Virtulization
-        \item One-to-many: Disk Virtulization
-        \item Many-to-many
+    \item Resource Virtualization \begin{itemize}
+        \item Many(virtual)-to-one(physical): Memory Virtualization
+        \item One-to-many: CPU Virtualization
+        \item Many-to-many: Displays
     \end{itemize}
 \end{itemize}
 \subsubsection{How to invoke OS code?}
@@ -858,6 +858,93 @@ Example
     \end{itemize}
 \end{itemize}
 
+\section{Semaphores, Condition Variables, Producer Consumer Problem}
+\subsection{Semaphores}
+\subsubsection{Definition}
+Can be seen as a non-negative integer
+\begin{itemize}
+    \item Semaphore is a fundamental synchronization primitive used for \begin{itemize}
+        \item Locking around critical regions 
+        \item Inter-process synchronization
+    \end{itemize}
+    \item A semaphore “sem” is a special integer on which only two operations can be performed \begin{itemize}
+        \item DOWN(sem)
+        \item UP(sem)
+    \end{itemize}
+\end{itemize}
+\subsubsection{DOWN(sem) Operation}
+\begin{itemize}
+    \item If (sem \textgreater \ 0) then \begin{itemize}
+        \item Decrements sem by 1 
+        \item The caller continues executing. 
+        \item This is a {\bfseries successful} down operation.
+    \end{itemize}
+    \item If (sem == 0) then \begin{itemize}
+        \item Block the caller 
+        \item The caller blocks until another process calls an UP. 
+        \item The blocked process wakes up and tries DOWN again. 
+        \item If it succeeds, then it moves to {\bfseries ready} state 
+        \item Otherwise it is blocked again till someone calls UP. 
+        \item And so on
+    \end{itemize}
+\end{itemize}
+\subsubsection{UP(sem) Operation}
+\begin{itemize}
+    \item This operation increments the semaphore sem by 1. 
+    \item If the original value of the semaphore was 0, then UP operation wakes up {\bfseries all processes} that were sleeping on the DOWN(sem) operation. 
+    \item All woken up processes compete to perform DOWN(sem) again. Only one of them succeeds and the rest are blocked again.
+\end{itemize}
+\subsubsection{Mutex}
+A simply binary semaphore
+\begin{itemize}
+    \item Used as a LOCK around critical sections
+    \item Locking a mutex means calling Down(mutex)
+    \item Unlocking a semaphore means calling UP(mutex)
+\end{itemize}
+\subsection{Producer-Consumer Problem}
+\subsubsection{Definition}
+\includegraphics[width=0.8\textwidth]{Producer-ConsumerProblem.png}
+\begin{itemize}
+    \item Producers and consumers run in concurrent processes.
+    \item Producers produce data and consumers consume data.
+    \item Producer informs consumers when data is available
+    \item Consumer informs producers when a buffer is empty.
+    \item Two types of synchronization needed \begin{itemize}
+        \item Locking the buffer to prevent concurrent modification
+        \item Informing the other side that data/buffer is available
+    \end{itemize}
+\end{itemize}
+\subsubsection{Solution}
+\begin{lstlisting}
+#define N 100
+typedef int semaphore;
+semaphore mutex = 1;
+semaphore empty = N;
+semaphore full = 0;
 
+void producer(void){
+    int item;
+    while(true){
+        item = produce_item();
+        down(&empty);
+        down(&mutex);
+        insert_item(item);
+        up(&mutex);
+        up(&full);
+    }
+}
+
+void consumer(void){
+    int item;
+    while(true){
+        down(&full);
+        down(&mutex);
+        item = remove_item();
+        up(&mutex);
+        up(&empty);
+        consume_item(item);
+    }
+}
+\end{lstlisting}
 
 \end{document}
