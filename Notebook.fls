@@ -687,6 +687,16 @@ INPUT ./images//MutualExclusionOverview.png
 INPUT ./images//MutualExclusionOverview.png
 INPUT ./images//MutualExclusionOverview.png
 INPUT ./images//MutualExclusionOverview.png
+INPUT ./images//InterruptServiceRoutine.png
+INPUT ./images//InterruptServiceRoutine.png
+INPUT ./images//InterruptServiceRoutine.png
+INPUT ./images//InterruptServiceRoutine.png
+INPUT ./images//InterruptServiceRoutine.png
+INPUT ./images//InterruptAndDeadlock.png
+INPUT ./images//InterruptAndDeadlock.png
+INPUT ./images//InterruptAndDeadlock.png
+INPUT ./images//InterruptAndDeadlock.png
+INPUT ./images//InterruptAndDeadlock.png
 INPUT e:/Environment/texlive/2021/texmf-dist/tex/latex/base/omlcmr.fd
 INPUT e:/Environment/texlive/2021/texmf-dist/tex/latex/base/omlcmr.fd
 INPUT e:/Environment/texlive/2021/texmf-dist/tex/latex/base/omlcmr.fd

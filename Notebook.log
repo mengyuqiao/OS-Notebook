@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.9.24)  29 SEP 2021 17:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.9.24)  5 OCT 2021 19:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -310,152 +310,164 @@ LaTeX Info: Redefining \nameref on input line 42.
 \openout4 = `Notebook.toc'.
 
  [4]
-<./images//WhyDoWeNeedOS.png, id=398, 791.95876pt x 410.53375pt>
+<./images//WhyDoWeNeedOS.png, id=413, 791.95876pt x 410.53375pt>
 File: ./images//WhyDoWeNeedOS.png Graphic file (type png)
 <use ./images//WhyDoWeNeedOS.png>
 Package pdftex.def Info: ./images//WhyDoWeNeedOS.png  used on input line 71.
 (pdftex.def)             Requested size: 390.0pt x 202.17183pt.
  [5 <./images//WhyDoWeNeedOS.png>]
-<./images//FourWaysToInvokeOS.png, id=406, 584.1825pt x 481.8pt>
+<./images//FourWaysToInvokeOS.png, id=421, 584.1825pt x 481.8pt>
 File: ./images//FourWaysToInvokeOS.png Graphic file (type png)
 <use ./images//FourWaysToInvokeOS.png>
 Package pdftex.def Info: ./images//FourWaysToInvokeOS.png  used on input line 90.
 (pdftex.def)             Requested size: 312.00119pt x 257.33037pt.
  [6]
-<./images//InterfacesInComputerSystem.png, id=411, 410.53375pt x 467.7475pt>
+<./images//InterfacesInComputerSystem.png, id=426, 410.53375pt x 467.7475pt>
 File: ./images//InterfacesInComputerSystem.png Graphic file (type png)
 <use ./images//InterfacesInComputerSystem.png>
 Package pdftex.def Info: ./images//InterfacesInComputerSystem.png  used on input line 102.
 (pdftex.def)             Requested size: 234.00238pt x 266.6117pt.
  [7 <./images//FourWaysToInvokeOS.png>] [8 <./images//InterfacesInComputerSystem.png>] [9]
-<./images//ProcessMemoryLayout.png, id=427, 981.6675pt x 428.60126pt>
+<./images//ProcessMemoryLayout.png, id=442, 981.6675pt x 428.60126pt>
 File: ./images//ProcessMemoryLayout.png Graphic file (type png)
 <use ./images//ProcessMemoryLayout.png>
 Package pdftex.def Info: ./images//ProcessMemoryLayout.png  used on input line 151.
 (pdftex.def)             Requested size: 390.0pt x 170.27335pt.
  [10 <./images//ProcessMemoryLayout.png>]
-<./images//ProcessLifecycle.png, id=433, 852.18375pt x 262.9825pt>
+<./images//ProcessLifecycle.png, id=448, 852.18375pt x 262.9825pt>
 File: ./images//ProcessLifecycle.png Graphic file (type png)
 <use ./images//ProcessLifecycle.png>
 Package pdftex.def Info: ./images//ProcessLifecycle.png  used on input line 167.
 (pdftex.def)             Requested size: 390.0pt x 120.35544pt.
  [11 <./images//ProcessLifecycle.png>] [12]
-<./images//PipeAbstraction.png, id=448, 644.4075pt x 137.51375pt>
+<./images//PipeAbstraction.png, id=463, 644.4075pt x 137.51375pt>
 File: ./images//PipeAbstraction.png Graphic file (type png)
 <use ./images//PipeAbstraction.png>
 Package pdftex.def Info: ./images//PipeAbstraction.png  used on input line 226.
 (pdftex.def)             Requested size: 312.00119pt x 66.58287pt.
-<./images//ParentChildCommunicationUsingPipe.png, id=449, 703.62875pt x 384.43625pt>
+<./images//ParentChildCommunicationUsingPipe.png, id=464, 703.62875pt x 384.43625pt>
 File: ./images//ParentChildCommunicationUsingPipe.png Graphic file (type png)
 <use ./images//ParentChildCommunicationUsingPipe.png>
 Package pdftex.def Info: ./images//ParentChildCommunicationUsingPipe.png  used on input line 228.
 (pdftex.def)             Requested size: 312.00119pt x 170.46059pt.
  [13 <./images//PipeAbstraction.png> <./images//ParentChildCommunicationUsingPipe.png>]
-<./images//FileDescriptorTable.png, id=457, 694.595pt x 400.49625pt>
+<./images//FileDescriptorTable.png, id=473, 694.595pt x 400.49625pt>
 File: ./images//FileDescriptorTable.png Graphic file (type png)
 <use ./images//FileDescriptorTable.png>
 Package pdftex.def Info: ./images//FileDescriptorTable.png  used on input line 235.
 (pdftex.def)             Requested size: 312.00119pt x 179.90387pt.
  [14 <./images//FileDescriptorTable.png>] [15] [16]
-<./images//PipeErrorHandling.png, id=546, 549.05125pt x 723.70375pt>
+<./images//PipeErrorHandling.png, id=561, 549.05125pt x 723.70375pt>
 File: ./images//PipeErrorHandling.png Graphic file (type png)
 <use ./images//PipeErrorHandling.png>
 Package pdftex.def Info: ./images//PipeErrorHandling.png  used on input line 349.
 (pdftex.def)             Requested size: 312.00119pt x 411.25655pt.
  [17]
-<./images//SignalOverview.png, id=551, 325.215pt x 346.29375pt>
+<./images//SignalOverview.png, id=566, 325.215pt x 346.29375pt>
 File: ./images//SignalOverview.png Graphic file (type png)
 <use ./images//SignalOverview.png>
 Package pdftex.def Info: ./images//SignalOverview.png  used on input line 357.
 (pdftex.def)             Requested size: 234.00238pt x 249.17278pt.
  [18 <./images//PipeErrorHandling.png>] [19 <./images//SignalOverview.png>]
-<./images//SharedMemoryOverview.png, id=563, 772.8875pt x 553.06625pt>
+<./images//SharedMemoryOverview.png, id=579, 772.8875pt x 553.06625pt>
 File: ./images//SharedMemoryOverview.png Graphic file (type png)
 <use ./images//SharedMemoryOverview.png>
 Package pdftex.def Info: ./images//SharedMemoryOverview.png  used on input line 392.
 (pdftex.def)             Requested size: 312.00119pt x 223.26483pt.
  [20 <./images//SharedMemoryOverview.png>] [21] [22] [23] [24] [25] [26]
-<./images//ThreadAddressSpace.png, id=749, 716.6775pt x 455.7025pt>
+<./images//ThreadAddressSpace.png, id=764, 716.6775pt x 455.7025pt>
 File: ./images//ThreadAddressSpace.png Graphic file (type png)
 <use ./images//ThreadAddressSpace.png>
 Package pdftex.def Info: ./images//ThreadAddressSpace.png  used on input line 595.
 (pdftex.def)             Requested size: 390.0pt x 247.98787pt.
  [27 <./images//ThreadAddressSpace.png>]
-<./images//UserLevelThreads.png, id=755, 521.95pt x 480.79625pt>
+<./images//UserLevelThreads.png, id=770, 521.95pt x 480.79625pt>
 File: ./images//UserLevelThreads.png Graphic file (type png)
 <use ./images//UserLevelThreads.png>
 Package pdftex.def Info: ./images//UserLevelThreads.png  used on input line 634.
 (pdftex.def)             Requested size: 234.00238pt x 215.55664pt.
  [28]
-<./images//KernelLevelThreads.png, id=760, 411.5375pt x 468.75125pt>
+<./images//KernelLevelThreads.png, id=775, 411.5375pt x 468.75125pt>
 File: ./images//KernelLevelThreads.png Graphic file (type png)
 <use ./images//KernelLevelThreads.png>
 Package pdftex.def Info: ./images//KernelLevelThreads.png  used on input line 641.
 (pdftex.def)             Requested size: 234.00238pt x 266.53294pt.
-<./images//MultiplexingThreads.png, id=761, 869.2475pt x 538.01pt>
+<./images//MultiplexingThreads.png, id=776, 869.2475pt x 538.01pt>
 File: ./images//MultiplexingThreads.png Graphic file (type png)
 <use ./images//MultiplexingThreads.png>
 Package pdftex.def Info: ./images//MultiplexingThreads.png  used on input line 645.
 (pdftex.def)             Requested size: 234.00238pt x 144.82954pt.
  [29 <./images//UserLevelThreads.png> <./images//KernelLevelThreads.png>]
-<./images//LocalThreadScheduling.png, id=768, 582.175pt x 525.965pt>
+<./images//LocalThreadScheduling.png, id=784, 582.175pt x 525.965pt>
 File: ./images//LocalThreadScheduling.png Graphic file (type png)
 <use ./images//LocalThreadScheduling.png>
 Package pdftex.def Info: ./images//LocalThreadScheduling.png  used on input line 651.
 (pdftex.def)             Requested size: 234.00238pt x 211.40953pt.
  [30 <./images//MultiplexingThreads.png> <./images//LocalThreadScheduling.png>]
-<./images//GlobalThreadScheduling.png, id=775, 405.515pt x 449.68pt>
+<./images//GlobalThreadScheduling.png, id=791, 405.515pt x 449.68pt>
 File: ./images//GlobalThreadScheduling.png Graphic file (type png)
 <use ./images//GlobalThreadScheduling.png>
 Package pdftex.def Info: ./images//GlobalThreadScheduling.png  used on input line 661.
 (pdftex.def)             Requested size: 234.00238pt x 259.4903pt.
  [31 <./images//GlobalThreadScheduling.png>] [32]
-<./images//ConcurrencyOverview.png, id=814, 952.55875pt x 296.10625pt>
+<./images//ConcurrencyOverview.png, id=829, 952.55875pt x 296.10625pt>
 File: ./images//ConcurrencyOverview.png Graphic file (type png)
 <use ./images//ConcurrencyOverview.png>
 Package pdftex.def Info: ./images//ConcurrencyOverview.png  used on input line 731.
 (pdftex.def)             Requested size: 312.00119pt x 96.98792pt.
  [33 <./images//ConcurrencyOverview.png>]
-<./images//MutualExclusionOverview.png, id=833, 755.82375pt x 550.055pt>
+<./images//MutualExclusionOverview.png, id=848, 755.82375pt x 550.055pt>
 File: ./images//MutualExclusionOverview.png Graphic file (type png)
 <use ./images//MutualExclusionOverview.png>
 Package pdftex.def Info: ./images//MutualExclusionOverview.png  used on input line 755.
 (pdftex.def)             Requested size: 312.00119pt x 227.05995pt.
  [34] [35 <./images//MutualExclusionOverview.png>] [36] [37]
-Overfull \hbox (5.70981pt too wide) in paragraph at lines 861--861
+<./images//InterruptServiceRoutine.png, id=895, 529.98pt x 354.32375pt>
+File: ./images//InterruptServiceRoutine.png Graphic file (type png)
+<use ./images//InterruptServiceRoutine.png>
+Package pdftex.def Info: ./images//InterruptServiceRoutine.png  used on input line 867.
+(pdftex.def)             Requested size: 234.00238pt x 156.44357pt.
+ [38]
+<./images//InterruptAndDeadlock.png, id=900, 690.58pt x 639.38875pt>
+File: ./images//InterruptAndDeadlock.png Graphic file (type png)
+<use ./images//InterruptAndDeadlock.png>
+Package pdftex.def Info: ./images//InterruptAndDeadlock.png  used on input line 869.
+(pdftex.def)             Requested size: 234.00238pt x 216.64781pt.
+ [39 <./images//InterruptServiceRoutine.png> <./images//InterruptAndDeadlock.png>]
+Overfull \hbox (5.70981pt too wide) in paragraph at lines 892--892
 []\OT1/cmr/bx/n/17.28 Semaphores, Con-di-tion Vari-ables, Pro-ducer
  []
 
-[38]
-LaTeX Font Info:    Trying to load font information for OML+cmr on input line 877.
+[40]
+LaTeX Font Info:    Trying to load font information for OML+cmr on input line 908.
  (e:/Environment/texlive/2021/texmf-dist/tex/latex/base/omlcmr.fd
 File: omlcmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 877.
- [39]
-<./images//Producer-ConsumerProblem.png, id=889, 931.48pt x 348.30125pt>
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 908.
+ [41]
+<./images//Producer-ConsumerProblem.png, id=925, 931.48pt x 348.30125pt>
 File: ./images//Producer-ConsumerProblem.png Graphic file (type png)
 <use ./images//Producer-ConsumerProblem.png>
-Package pdftex.def Info: ./images//Producer-ConsumerProblem.png  used on input line 906.
+Package pdftex.def Info: ./images//Producer-ConsumerProblem.png  used on input line 937.
 (pdftex.def)             Requested size: 312.00119pt x 116.66171pt.
- [40 <./images//Producer-ConsumerProblem.png>] [41] (./Notebook.aux)
+ [42 <./images//Producer-ConsumerProblem.png>] [43] (./Notebook.aux)
 Package rerunfilecheck Info: File `Notebook.out' has not changed.
-(rerunfilecheck)             Checksum: 87E45E2CC6FE7800902851FB157DE488;10411.
+(rerunfilecheck)             Checksum: CFD9F737C20798DF62519EB2ABA8866E;11101.
  ) 
 Here is how much of TeX's memory you used:
- 11196 strings out of 478599
- 166731 string characters out of 5852089
+ 11229 strings out of 478599
+ 167537 string characters out of 5852089
  736542 words of memory out of 5000000
- 28485 multiletter control sequences out of 15000+600000
+ 28502 multiletter control sequences out of 15000+600000
  410875 words of font info for 53 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  60i,6n,66p,489b,1926s stack positions out of 5000i,500n,10000p,200000b,80000s
 {e:/Environment/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><e:/Environment/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on Notebook.pdf (41 pages, 1111089 bytes).
+Output written on Notebook.pdf (43 pages, 1211486 bytes).
 PDF statistics:
- 1062 PDF objects out of 1200 (max. 8388607)
- 953 compressed objects within 10 object streams
- 443 named destinations out of 1000 (max. 500000)
- 693 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1102 PDF objects out of 1200 (max. 8388607)
+ 987 compressed objects within 10 object streams
+ 457 named destinations out of 1000 (max. 500000)
+ 727 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -75,9 +75,9 @@ Why do we need an OS?
 \begin{itemize}
     \item Definition: OS takes a physical resource (such a sthe processor, or memory, or a disk) and transforms it into a more general, powerful, and easy-to-use virtual form of itself.
     \item Resource Virtualization \begin{itemize}
-        \item Many(virtual)-to-one(physical): Memory Virtualization
-        \item One-to-many: CPU Virtualization
-        \item Many-to-many: Displays
+        \item Many(virtual)-to-one(physical): Virtual Machine
+        \item One-to-many: Memory Virtualization
+        \item Many-to-many: CPU Virtualization
     \end{itemize}
 \end{itemize}
 \subsubsection{How to invoke OS code?}
@@ -95,7 +95,7 @@ Why do we need an OS?
     \item Instruction Set Architecture(ISA): the language CPU understand
     \item User ISA: ISA that any program can execute, it's accessible for all programs, doesn't need the service of operating system
     \item System ISA: ISA that only operating system is allowed to execute.
-    \item Application Binary Interface(ABI): the combination of syscalls and User ISA(3, 7), it's the view of the world, seen by programs.
+    \item Application Binary Interface(ABI): the combination of syscalls and User ISA(3, 7), it's the view of the world, seen by programs. It's the reason why a program complied on one OS cannot be just moved to another OS.
     \item Application Programmers' Interface(API): the combination of libraries and User ISA(2, 7), it's the tools programmer use to write codes.
 \end{itemize}
 \subsubsection{Interfaces in a Computer System}
@@ -110,9 +110,9 @@ Why do we need an OS?
 
 \subsection{History}
 \begin{itemize}
-    \item First Computer: Atanasoff–Berry computer, or ABC.
+    \item First Computer: Atanasoff–Berry computer, or ABC. ENIAC
     \item First OS: GM-NAA I/O, produced in 1956 by General Motors' Research division for its IBM 704.
-    \item First language: Plankalkül, developed by Konrad Zuse for the Z3 between 1943 and 1945.
+    \item First language: Plankalkül, developed by Konrad Zuse for the Z3 between 1943 and 1945. Or FORTRAN
     \item First programmer: Ada Lovelace
 \end{itemize}
 
@@ -158,7 +158,7 @@ In this picture, Stack and Heap grow toward each other, that's because every pro
         \item OS creates a process to provide a service: Check the directory /etc/init.d/ on Linux for scripts that start off different services at boot time.
         \item One process starts another process: For example in servers
     \end{itemize}
-    \item exec(): execute a file. {\bfseries replaces the process’ memory with a new program image. All I/O descriptors open before exec stay open after exec}.
+    \item exec(): execute a file. {\bfseries No return if Success. Replaces the process’ memory with a new program image. All I/O descriptors open before exec stay open after exec}.
     \item wait()/waitpid(): wait for child process.
     \item exit(): terminate a process
 \end{itemize}
@@ -210,7 +210,7 @@ In this picture, Stack and Heap grow toward each other, that's because every pro
 \subsection{Overview}
 Inter-Process Communication mechanisms
 \begin{itemize}
-    \item Pipe: 
+    \item Pipe: A directional communication mechanism
     \item Signals: Event notification from one process to another
     \item Shared momery: Common piece of read/write memory, needs authorization for access
     \item Parent-child: Command-line arguments, including waitpid(), wait(), exit()
@@ -358,7 +358,7 @@ We must incorporate error handling with every I/O call (actually with any system
 \subsubsection{Handling Signals}
 \begin{itemize}
     \item Signals can be {\bfseries caught} – i.e. an action (or handler) can be associated with them
-    \item Actions can be customized using /emph{sigaction()}, which associates a signal handler with the signal
+    \item Actions can be customized using {\bfseries sigaction()}, which associates a signal handler with the signal
     \item {\bfseries Default} action for most signals is to \underline{terminate the process}. Except SIGCHLD and SIGURG are ignored by default
     \item Unwanted signals can be {\bfseries ignored}, except SIGKILL or SIGSTOP
 \end{itemize}
@@ -857,6 +857,37 @@ Example
         \item Then Ph can execute
     \end{itemize}
 \end{itemize}
+\subsubsection{Interrupts and Locks}
+\begin{itemize}
+    \item Interrupts invoke \emph{interrupt service routines (ISR)} in the kernel \begin{itemize}
+        \item ISR must process the interrupt quickly and return: because there may be some other pending interrupts waiting to be delivered.
+        \item So ISRs must \emph{never block or spin on a lock}.
+    \end{itemize}
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{InterruptServiceRoutine.png}
+\subsubsection{Interrupts and Deadlocks — Problem}
+\includegraphics[width=0.6\textwidth]{InterruptAndDeadlock.png}
+\begin{enumerate}
+    \item P makes a syscall.
+    \item Syscall acquires lock
+    \item ISR preempts P* \emph{But P is still in the running state}
+    \item ISR attempts to lock
+    \item ISR blocks (since lock is taken)
+    \item Deadlock!    
+\end{enumerate}
+\subsubsection{Interrupts and Deadlocks — Solutions}
+\begin{enumerate}
+    \item Don’t lock in ISR!: Defer any locking work to thread context (softirqs in Linux)
+    \item If you must lock, use {$try lock()$} instead of lock() in ISR \begin{itemize}
+        \item {$try lock()$} = if lock is available then get it, else return with error
+        \item Write code to handle unavailable lock
+    \end{itemize}
+    \item Or disable interrupts in thread T before locking \begin{itemize}
+        \item If ISR cannot run when lock is acquired by T, then there’s no deadlock.
+        \item When ISR runs, it assumes that T doesn’t have the lock.
+        \item But, disabling interrupts too long is also not a good idea.
+    \end{itemize}
+\end{enumerate}
 
 \section{Semaphores, Condition Variables, Producer Consumer Problem}
 \subsection{Semaphores}
@@ -909,8 +940,9 @@ A simply binary semaphore
     \item Producers produce data and consumers consume data.
     \item Producer informs consumers when data is available
     \item Consumer informs producers when a buffer is empty.
-    \item Two types of synchronization needed \begin{itemize}
+    \item Three types of synchronization needed \begin{itemize}
         \item Locking the buffer to prevent concurrent modification
+        \item Locking the buffer to prevent concurrent modification and getting
         \item Informing the other side that data/buffer is available
     \end{itemize}
 \end{itemize}
