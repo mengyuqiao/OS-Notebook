@@ -776,7 +776,7 @@ Unlock(resource); // unclaim shared resource
         \end{lstlisting}
         \item Advantage: Simple to use. Locking always succeeds…ultimately
         \item Disadvantage: Blocking duration may be indefinite \begin{itemize}
-            \item Process is moved out of “Running” state to “Blocked” state, and return to running will cost much resource
+            \item Process is moved out of "Running" state to "Blocked" state, and return to running will cost much resource
             \item Delay in getting back to running state if lock becomes available soon after blocking
         \end{itemize}
     \end{itemize}
@@ -795,7 +795,7 @@ else
     Do something else; // plan B
         \end{lstlisting}
         \item Advantage: No unbounded blocking
-        \item Disadvantage: Need a “plan B” to handle locking failure
+        \item Disadvantage: Need a "plan B" to handle locking failure
     \end{itemize}
     \item Spin locks \begin{itemize}
         \item Don’t block. Instead, constantly poll the lock for availability \begin{lstlisting}
@@ -846,7 +846,7 @@ Example
         \item Pl acquires a lock L 
         \item Pl starts executing critical section 
         \item Ph tries to acquire lock L and blocks 
-        \item Pm becomes “ready” and preempts Pl from the CPU. 
+        \item Pm becomes "ready" and preempts Pl from the CPU. 
         \item Pl might never exit critical section if Pm keeps preempting Pl
         \item So Ph might never enter critical section
     \end{itemize}
@@ -898,7 +898,7 @@ Can be seen as a non-negative integer
         \item Locking around critical regions 
         \item Inter-process synchronization
     \end{itemize}
-    \item A semaphore “sem” is a special integer on which only two operations can be performed \begin{itemize}
+    \item A semaphore "sem" is a special integer on which only two operations can be performed \begin{itemize}
         \item DOWN(sem)
         \item UP(sem)
     \end{itemize}
@@ -978,5 +978,245 @@ void consumer(void){
     }
 }
 \end{lstlisting}
+\subsubsection{Using Semaphore}
+\subsubsection{POSIX interface}
+\begin{itemize}
+    \item $sem\_open()$
+    \item $sem\_init()$
+    \item $sem\_wait(), sem_trywait()$
+    \item $sem\_post()$
+    \item $sem\_close()$
+    \item $sem\_destroy()$
+    \item $sem\_getvalue()$
+    \item $sem\_unlink()$ -- Ends the connection to an open semaphore and causes the semaphore to be removed when the last process closes it.
+\end{itemize}
+
+\subsection{Monitors and Condition Variables}
+\subsubsection{Definition}
+\includegraphics[width=0.6\textwidth]{Monitor.png}
+\begin{itemize}
+    \item Monitor is a collection of critical section procedures (functions): i.e. functions that operate on shared resources 
+    \item There’s {\bfseries one global lock} on all procedures in the monitor. Only one procedure can be executed at any time
+    \item {\bfseries wait(c)} : releases the lock on monitor and puts the calling process to sleep. Automatically re-acquires the lock upon return from wait(c). 
+    \item {\bfseries signal(c)}: wakes up all the processes sleeping on c; the woken processes then compete to obtain lock on the monitor
+\end{itemize}
+\subsubsection{P-C problem with monitors and condition variables}
+\includegraphics[width=\textwidth]{PCProblemMonitor.png}
+
+\subsection{Atomic Locking – TSL Instruction}
+\begin{itemize}
+    \item Instruction format: TSL Register, Lock
+    \item Lock \begin{itemize}
+        \item Located in memory. 
+        \item Has a value of 0 or 1
+    \end{itemize}
+    \item Register: One of CPU registers
+    \item TSL does the following two operations {\bfseries atomically (as one step)} \begin{itemize}
+        \item Register := Lock; // Copy the old value of Lock to Register
+        \item Lock := 1; // Set the new value of Lock to 1
+    \end{itemize}
+    \item TSL is a basic primitive using which other more complex locking mechanisms can be implemented.
+\end{itemize}
+Implementation of Mutex Using TSL
+\newline
+\includegraphics[width=\textwidth]{TSLImplementation.png}
+
+\section{Kernel Modules}
+\subsection{Definition}
+\begin{itemize}
+    \item Allow code to be added to the kernel, dynamically 
+    \item Only those modules that are needed are loaded. Unload when no longer required - frees up memory and other resources 
+    \item Reduces kernel size. 
+    \item Enables independent development of drivers for different 
+    devices
+\end{itemize}
+\includegraphics[width=\textwidth]{KernelWorking.png}
+\subsection{Development}
+\subsubsection{Hello World Example}
+\begin{lstlisting}
+    #include <linux/init.h> 
+    #include <linux/module.h> 
+    MODULE_LICENSE("DUAL BSD/GPL"); 
+    // called when module is installed 
+    int __init hello_init() 
+    { 
+     printk(KERN_ALERT "mymodule: Hello World!\n"); 
+     return 0; 
+    } 
+    // called when module is removed 
+    void __exit hello_exit() 
+    { 
+     printk(KERN_ALERT "mymodule: Goodbye, cruel world!!\n"); 
+    } 
+    module_init(hello_init); 
+    module_exit(hello_exit);
+\end{lstlisting}
+\subsubsection{Compile}
+\begin{itemize}
+    \item Makefile \begin{itemize}
+        \item \textcolor{blue}{obj-m := testmod.o}
+        \item For multiple files: \textcolor{blue}{module-objs := file1.o file2.o}
+    \end{itemize}
+    \item Compiling: \$ make -C /lib/modules/\$(uname -r)/build M=`pwd` modules
+\end{itemize}
+\subsubsection{Module Utilities}
+\begin{itemize}
+    \item \textcolor{blue}{sudo insmod hello.ko} \begin{itemize}
+        \item Inserts a module
+        \item Internally, makes a call to sys\_init\_module
+        \item Calls vmalloc() to allocate kernel memory
+        \item Copies module binary to memory
+        \item Resolves any kernel references (e.g. printk) via kernel symbol table
+        \item Calls module’s initialization function
+    \end{itemize}
+    \item \textcolor{blue}{modprobe hello.ko}: Same as insmod, except that it also loads any other modules that hello.ko references
+    \item \textcolor{blue}{sudo rmmod hello} \begin{itemize}
+        \item Removes a module
+        \item Fails if module is still in use
+    \end{itemize}
+    \item \textcolor{blue}{sudo lsmod} \begin{itemize}
+        \item Tells what modules are currently loaded 
+        \item Internally reads /proc/modules
+    \end{itemize}
+\end{itemize}
+\subsubsection{Things to Remember}
+\begin{itemize}
+    \item Modules can call other kernel functions, such as printk, kmalloc, kfree, but only the functions that are EXPORTed by the kernel(using EXPORT(symbol\_name))
+    \item Modules (or any kernel code for that matter) cannot call user-space library functions, such as  malloc, free, printf etc.
+    \item Modules should not include standard header files, such as stdio.h, stdlib.h, etc.
+    \item Segmentation fault may be harmless in user space, but a kernel fault can crash the entire system
+    \item Version Dependency: Module should be recompiled for each version of kernel that it is linked to
+\end{itemize}
+\subsubsection{Concurrency Issues}
+\begin{itemize}
+    \item Many processes could try to access your module concurrently. So different parts of your module may be active at the same time
+    \item Device interrupts can trigger Interrupt Service Routines (ISR), ISRs may access common data that your module uses as well
+    \item Kernel timers can concurrently execute with your module and access common data
+    \item You may have symmetric multi-processor (SMP) system, so multiple processors may be executing your module code simultaneously (not just concurrently).
+    \item Therefore, your module code (and most kernel code, in general) should be re-enterant, Capable of correctly executing correctly in more than one context simultaneously
+\end{itemize}
+\subsubsection{Error Handling}
+\includegraphics[width=\textwidth]{KernelErrorHandling.png}
+\subsubsection{Module Parameters}
+\begin{itemize}
+    \item Command line: \textcolor{blue}{insmod hellon.ko howmany=10 whom="Class"}
+    \item Module code has: \begin{lstlisting}
+        static char *whom = "world";
+        static int howmany = 1;
+        module_param(howmany, int, S_IRUGO);
+        module_param(whom, charp, S_IRUGO);
+    \end{lstlisting}
+\end{itemize}
+\subsection{Character devices in Linux}
+\subsubsection{Device Classification}
+\begin{itemize}
+    \item Character (char) devices \begin{itemize}
+        \item byte-stream abstraction(keyboard, mouse)
+    \end{itemize}
+    \item Block devices \begin{itemize}
+        \item reads/writes in fixed block granularity (hard disks, CD drives)
+    \end{itemize}
+    \item Network devices \begin{itemize}
+        \item message abstraction, send/receive packets of varying sizes (network interface cards)
+    \end{itemize}
+    \item Others \begin{itemize}
+        \item USB, SCSI, Firewire, I2O
+        \item Can (mostly) be used to implement one or more of the above three classes
+    \end{itemize}
+\end{itemize}
+\subsubsection{"Miscellaneous" Devices in Linux}
+\begin{itemize}
+    \item These are character devices used for simple device drivers. 
+    \item All miscellaneous devices share a major number (10). 
+    \item But each device gets its own minor number, requested at registration time
+\end{itemize}
+\subsubsection{Implementing a device driver for a miscellaneous device}
+\begin{enumerate}
+    \item  Declare a device struct \begin{lstlisting}
+        static struct miscdevice my_misc_device = {
+        .minor = MISC_DYNAMIC_MINOR,
+        .name = "my device",
+        .fops = &my_fops
+    };
+    \end{lstlisting}
+    \item Declare the file operations struct \begin{lstlisting}
+        static struct file_operations my_fops = {
+            .owner = THIS_MODULE,
+            .open = my_open,
+            .release = my_close,
+            .read = my_read,
+            ...
+            .llseek = noop_llseek
+        };
+        // The function pointers that are not initialized above will be assigned some sensible default value by the kernel.
+    \end{lstlisting}
+    \item register the device with kernel, usually in the module initialization code \begin{lstlisting}
+        static int __init my_module_init()
+        {
+            ...
+            misc_register(&my_misc_device);
+            ...
+        }
+        // And don't forget to unregister the device when removing the module
+        static void __exit my_exit(void)
+        {
+            misc_deregister(&my_misc_device);
+            ...
+        }
+    \end{lstlisting}
+    \item Implement the fops functions \begin{lstlisting}
+        static ssize_t my_read(struct file *file, char __user * out, size_t size, loff_t * off)
+        {
+            ...
+            sprintf(buf, "Hello World\n");
+            copy_to_user(out, buf, strlen(buf)+1);
+            ...
+        }
+    \end{lstlisting}
+    \item Warning \begin{itemize}
+        \item allocate memory for buf
+        \item Check if "out" points to a valid user memory location using\ access\_OK()
+        \item check for errors during copy\_to\_user()
+    \end{itemize}
+\end{enumerate}
+\subsubsection{How do file ops work on character devices}
+\begin{itemize}
+    \item A file operation on a device file will be handled by the kernel module associated with the device
+    \item Use "open()" system call to open "mydevice" file \begin{itemize}
+        \item fd = open("/dev/mydevice", O\_RDWR); 
+        \item opens /dev/mydevice device for read and write operation. 
+        \item OS will call my\_open() file operation handler in the kernel module which is associated with the device. 
+        \item misc\_register(\&my\_misc\_device) in my\_module\_init() registers the character device. It creates an entry in the "/dev" directory for "mydevice" file and informs the operating system what file-operations handler functions are available for this device.
+    \end{itemize}
+    \item Use "read()" system call to read from the "mydevice" file \begin{itemize}
+        \item n = read( fd, buffer, size);
+        \item finally calls the my\_read() function passed through the fops structure in your kernel module
+    \end{itemize}
+\end{itemize}
+\subsubsection{Moving data in and out of the Kernel}
+\begin{itemize}
+    \item copy\_to\_user() \begin{itemize}
+        \item unsigned long copy\_to\_user (void \_\_user * dst, const void * src, unsigned long n)
+        \item Copies data from kernel space to user space
+        \item Returns number of bytes that could not be copied. On success, this will be zero.
+        \item Checks that dst is writable by calling access\_ok on dst with a type of VERIFY\_WRITE. If it returns non-zero, copy\_to\_user proceeds to copy
+    \end{itemize}
+    \item copy\_from\_user() \begin{itemize}
+        \item unsigned long copy\_from\_user (void * dst, const void \_\_user * src, unsigned long n)
+        \item Copies data from user space to kernel
+        \item Returns number of bytes that could not be copied. On success, this will be zero
+    \end{itemize}
+\end{itemize}
+\subsubsection{Memory allocation/deallocation in Kernel}
+\begin{itemize}
+    \item Memory Allocation: \begin{itemize}
+        \item kmalloc(): Allocates physically contiguous memory: \begin{lstlisting}
+            void * kmalloc(size_t size, int flags)
+        \end{lstlisting}
+        \item kzalloc(): Allocates memory and sets it to zero
+        \item vmalloc(): Allocates memory that is virtually contiguous and not necessarily physically contiguous.
+    \end{itemize}
+    \item Memory Deallocation: kfree()
+\end{itemize}
 
 \end{document}
