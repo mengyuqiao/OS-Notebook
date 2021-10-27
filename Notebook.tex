@@ -1219,4 +1219,105 @@ Implementation of Mutex Using TSL
     \item Memory Deallocation: kfree()
 \end{itemize}
 
+\section{System Calls}
+\subsection{Definition}
+\begin{itemize}
+    \item Interface to allow User-level processes to safely invoke OS routines for privileged operations
+    \item Safely transfer control from lower privilege level (user mode) to higher privilege level (supervisor mode), and back
+\end{itemize}
+\includegraphics[width=\textwidth]{SystemCalls.png}
+\subsubsection{System Call table}
+\begin{itemize}
+    \item \textcolor{blue}{Protected entry points} into the kernel for each system call: We don’t want application to randomly jump into any part of the OS code
+    \item Syscall table is usually implemented as an array of function pointers, where each function implements one system call
+    \item Syscall table is indexed via system call number
+\end{itemize}
+\includegraphics[width=0.8\textwidth]{SystemCallTable.png}
+\subsubsection{System Call Invocation}
+\begin{enumerate}
+    \item System calls is invoked via a special CPU instruction: The system call number and arguments passed via CPU registers and optionally stack
+    \item CPU saves process execution state
+    \item CPU switches to higher privilege level: jumps to an entry point in OS code
+    \item OS indexes the system call table using the system call number
+    \item OS invokes the system call via a function pointer in the system call table \begin{itemize}
+        \item For performance reasons, the system call usually executes in the execution context of the calling process, but in privileged mode
+        \item Some OS may execute the system call in a separate execution context for better security
+    \end{itemize}
+    \item If the syscall involves blokcing I/O, the calling process may block while the I/O completes
+    \item When syscall completes, the calling process is moved to ready state
+    \item The saved process state is restored
+    \item Processor switches back to lower privilege level using SYSEXIT/iret instructions
+    \item Process returns from the system call and continues.
+\end{enumerate}
+\includegraphics[width=\textwidth]{SystemCallExecution.png}
+\subsection{Syscall Usage}
+\begin{itemize}
+    \item To make it easier to invoke system calls, OS writers normally provide a library that sits between programs and system call interface: Libc, glibc, etc 
+    \item This library provides wrapper routines
+    \item Wrappers hide the low-level details of \begin{itemize}
+        \item Preparing arguments
+        \item Passing arguments to kernel 
+        \item Switching to supervisor mode
+        \item Fetching and returning results to application
+    \end{itemize}
+    \item Helps to reduce OS dependency and increase portability of programs
+\end{itemize}
+\subsection{Implementing}
+\subsubsection{Steps in Writing a System Call}
+\begin{enumerate}
+    \item Create an entry for the system call in the kernel’s \textcolor{blue}{syscall\_table}: User processes trapping to the kernel (through SYS\_ENTER or int 0x80) find the syscall function by indexing into this table
+    \item Write the system call code as a kernel function \begin{itemize}
+        \item Be careful when reading/writing to user-space
+        \item Use copy\_to\_user() or copy\_from\_user() routines. These perform sanity checks.
+    \end{itemize}
+    \item Implement a user-level wrapper to invoke your system call: Hides the complexity of making a system call from user applications.
+\end{enumerate}
+\subsubsection{Code}
+\begin{enumerate}
+    \item Create a sys\_call\_table entry (for 64-bit x86 machines):Syscall table initialized in arch/x86/entry/syscall\_64.c \begin{lstlisting}
+        # 
+        # 64-bit system call numbers and entry vectors 
+        # 
+        # The format is: 
+        # <number> <abi> <name> <entry point> 
+        # 
+        # The abi is "common", "64" or "x32" for this file. 
+        ... 
+        309 common getcpu sys_getcpu 
+        310 64 process_vm_readv sys_process_vm_readv 
+        311 64 process_vm_writev sys_process_vm_writev 
+        312 common kcmp sys_kcmp 
+        313 common foo sys_foo
+    \end{lstlisting}
+    \item Write the system call handler \begin{itemize}
+        \item System call with no arguments and integer return value \begin{lstlisting}
+            SYSCALL_DEFINE0(foo){ 
+                printk (KERN ALERT "sys_foo: pid is %d\n", current->pid); 
+                return current->pid; 
+            }
+        \end{lstlisting}
+        \item Syscall with one primitive argument \begin{lstlisting}
+            SYSCALL_DEFINE1(foo, int, arg){
+                printk (KERN ALERT "sys_foo: Argument is %d\n", arg); 
+                return arg;
+            }
+        \end{lstlisting}
+        \item To see system log: \begin{itemize}
+            \item dmesg
+            \item less /var/log/kern.log
+        \end{itemize}
+        \includegraphics[width=0.8\textwidth]{SystemCallHandler.png}
+    \end{itemize}
+    \item Invoke syscall handler from user space \begin{itemize}
+        \item Use the syscall(...) library function.
+        \item For instance, for a no-argument system call named foo(), you'll call \begin{lstlisting}
+            ret = syscall(__NR_sys_foo);
+        \end{lstlisting}
+        \item For a 1 argument system call named foo(arg), you call \begin{lstlisting}
+            ret = syscall(__NR_sys_foo, arg);
+        \end{lstlisting}
+        \item and so on for 2, 3, 4 arguments etc.
+    \end{itemize}
+\end{enumerate}
+
 \end{document}
