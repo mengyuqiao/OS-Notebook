@@ -106,3 +106,18 @@
 \contentsline {subsection}{\numberline {8.3}Implementing}{58}{subsection.8.3}%
 \contentsline {subsubsection}{\numberline {8.3.1}Steps in Writing a System Call}{58}{subsubsection.8.3.1}%
 \contentsline {subsubsection}{\numberline {8.3.2}Code}{58}{subsubsection.8.3.2}%
+\contentsline {section}{\numberline {9}Memory Management}{60}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Memory Hierarchy}{60}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Relocation and Protection}{61}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Swapping}{62}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Paging}{62}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Memory Management Unit (MMU)}{63}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}Size of address space (in bytes) as a function of address size (in bits)}{65}{subsection.9.6}%
+\contentsline {subsection}{\numberline {9.7}PageTable}{65}{subsection.9.7}%
+\contentsline {subsection}{\numberline {9.8}Traslate Virtual address (VA) to physical address (PA)}{66}{subsection.9.8}%
+\contentsline {subsubsection}{\numberline {9.8.1}Virtual Address Translation For Small Address Space}{68}{subsubsection.9.8.1}%
+\contentsline {subsubsection}{\numberline {9.8.2}Virtual Address Translation For Large Address Space}{69}{subsubsection.9.8.2}%
+\contentsline {subsection}{\numberline {9.9}Typical Page Table Entry (PTE)}{70}{subsection.9.9}%
+\contentsline {subsection}{\numberline {9.10}TLBs – Translation Lookaside Buffers}{71}{subsection.9.10}%
+\contentsline {subsection}{\numberline {9.11}Impact of Page Size on Page tables}{72}{subsection.9.11}%
+\contentsline {subsubsection}{\numberline {9.11.1}Small Page Size}{72}{subsubsection.9.11.1}%

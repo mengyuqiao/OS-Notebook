@@ -1,0 +1,213 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+
+\usepackage{graphicx}
+
+\usepackage{hyperref}
+
+\usepackage{xcolor}
+
+\usepackage{listings}
+
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+\usepackage[utf8]{inputenc}
+
+\title{Homework 3}
+
+\author{Yuqiao Meng}
+
+\begin{document}
+
+\maketitle
+
+\section{Insertion Sort}
+Initial Array: [10, 7, 3, 8, 1, 9, 0]
+\newline
+Steps:
+\begin{enumerate}
+    \item Pick up 7, it's less than 10, so it exchanges position with 10: [{\color{red}7}, 10, 3, 8, 1, 9, 0]
+    \item Pick up 3, it's less than 10, so it exchanges position with 10: [7, {\color{red}3}, 10, 8, 1, 9, 0]
+    \item Pick up 3, it's less than 7, so it exchanges position with 7: [{\color{red}3}, 7, 10, 8, 1, 9, 0]
+    \item Pick up 8, it's less than 10, so it exchanges position with 10: [3, 7, {\color{red}8}, 10, 1, 9, 0]
+    \item Pick up 8, it's bigger than 7, so it doesn't move: [3, 7, {\color{red}8}, 10, 1, 9, 0]
+    \item Pick up 1, it's less than 10, so it exchanges position with 10: [3, 7, 8, {\color{red}1}, 10, 9, 0]
+    \item Pick up 1, it's less than 8, so it exchanges position with 8: [3, 7, {\color{red}1}, 8, 10, 9, 0]
+    \item Pick up 1, it's less than 7, so it exchanges position with 7: [3, {\color{red}1}, 7, 8, 10, 9, 0]
+    \item Pick up 1, it's less than 3, so it exchanges position with 3: [{\color{red}1}, 3, 7, 8, 10, 9, 0]
+    \item Pick up 9, it's less than 10, so it exchanges position with 10: [1, 3, 7, 8, {\color{red}9}, 10, 0]
+    \item Pick up 9, it's bigger than 8, so it doesn't move: [1, 3, 7, 8, {\color{red}9}, 10, 0]
+    \item Pick up 0, it's less than 10, so it exchanges position with 10: [1, 3, 7, 8, 9, {\color{red}0}, 10]
+    \item Pick up 0, it's less than 9, so it exchanges position with 9: [1, 3, 7, 8, {\color{red}0}, 9, 10]
+    \item Pick up 0, it's less than 8, so it exchanges position with 8: [1, 3, 7, {\color{red}0}, 8, 9, 10]
+    \item Pick up 0, it's less than 7, so it exchanges position with 7: [1, 3, {\color{red}0}, 7, 8, 9, 10]
+    \item Pick up 0, it's less than 3, so it exchanges position with 3: [1, {\color{red}0}, 3, 7, 8, 9, 10]
+    \item Pick up 0, it's less than 1, so it exchanges position with 1: [{\color{red}0}, 1, 3, 7, 8, 9, 10]
+\end{enumerate}
+
+\section{Merge Sort}
+Initial Array: [13, 57, 39, 85, 70, 22, 64, 48]
+\newline
+Steps: p = 1, r = 8
+\begin{enumerate}
+    \item q = (1+8)/2 = 4 \begin{enumerate}
+        \item Merge Sort(p,q) = (1,4), q = (1+4)/2 = 2 \begin{enumerate}
+            \item Merge Sort(p,q) = (1,2), q = (1+2)/2 = 1 \begin{enumerate}
+                \item Merge Sort(p,q) = (1,1) = 13, return
+                \item Merge Sort(q+1,r) = (2,2) = 57, return
+                \item Merge [13] and [57]: 13 is less than 57: [13, 57]
+            \end{enumerate}
+            \item Merge Sort(q+1, r) = (3,4), q = (3+4)/2 = 3 \begin{enumerate}
+                \item Merge Sort(p,q) = (3,3) = 39, return
+                \item Merge Sort(q+1,r) = (4,4) = 85, return
+                \item Merge [39] and [85]: 39 is less than 85: [39, 85]
+            \end{enumerate}
+            \item Merge [13, 57] and [39, 85]: \begin{enumerate}
+                \item 13 is less than 39: [13]
+                \item 39 is less than 57: [13, 39]
+                \item 57 is less than 85: [13, 39, 57]
+                \item one array is empty, add the rest items at the bottom: [13, 39, 57, 85]
+            \end{enumerate}
+        \end{enumerate}
+        \item Merge Sort(q+1, r) = (5,8), q = (5+8)/2 = 6 \begin{enumerate}
+            \item Merge Sort(p,q) = (5,6), q = (5+6)/2 = 5 \begin{enumerate}
+                \item Merge Sort(p,q) = (5,5) = 70, return
+                \item Merge Sort(q+1,r) = (6,6) = 22, return
+                \item Merge [22] and [70]: 22 is less than 70: [22, 70]
+            \end{enumerate}
+            \item Merge Sort(q+1, r) = (7,8), q = (7+8)/2 = 7 \begin{enumerate}
+                \item Merge Sort(p,q) = (7,7) = 64, return
+                \item Merge Sort(q+1,r) = (8,8) = 48, return
+                \item Merge [48] and [64]: 48 is less than 64: [48, 64]
+            \end{enumerate}
+            \item Merge [22, 70] and [48, 64]: \begin{enumerate}
+                \item 22 is less than 48: [22]
+                \item 48 is less than 70: [22, 48]
+                \item 64 is less than 70: [22, 48, 64]
+                \item one array is empty, add the rest items at the bottom: [22, 48, 64, 70]
+            \end{enumerate}
+        \end{enumerate}
+        \item Merge [13, 39, 57, 85] and [22, 48, 64, 70]: \begin{enumerate}
+            \item 13 is less than 22: [13]
+            \item 22 is less than 39: [13, 39]
+            \item 39 is less than 48: [13, 39, 39]
+            \item 48 is less than 57: [13, 39, 39, 48]
+            \item 57 is less than 64: [13, 39, 39, 48, 57]
+            \item 64 is less than 85: [13, 39, 39, 48, 57, 64]
+            \item 70 is less than 85: [13, 39, 39, 48, 57, 64, 70]
+            \item one array is empty, add the rest items at the bottom: [13, 39, 39, 48, 57, 64, 70, 85]
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+
+\section{Strassen’s Method}
+A = $\begin{matrix}
+    2 & 3 \\ 1 & 2
+\end{matrix}$  
+B = $\begin{matrix}
+    5 & 6 \\ 1 & 3
+\end{matrix}$
+\newline
+Applying Strassen's Method: $A_{11}=2, A_{12}=3, A_{21}=4, A_{22}=5, B_{11}=5, B_{12}=6, B_{21}=1, B_{22}=3$
+\begin{itemize}
+    \item $P_1=A_{11}(B_{12}-B{22})=6$
+    \item $P_2=(A_{11}+A{12})B_{22}=15$
+    \item $P_3=(A_{21}+A{22})B_{11}=45$
+    \item $P_4=A_{22}(B_{21}-B{11})=-20$
+    \item $P_5=(A_{11}+A{22})(B_{11}+B{22})=56$
+    \item $P_6=(A_{12}-A{22})(B_{21}+B{22})=-8$
+    \item $P_7=(A_{11}-A{21})(B_{11}-B{12})=-22$
+    \item $C_{11}=P_{5}+P_{4}-P_{2}+P_{6}=13$
+    \item $C_{11}=P_{1}+P_{2}=21$
+    \item $C_{11}=P_{3}+P_{4}=25$
+    \item $C_{11}=P_{5}+P_{1}-P_{3}-P_{7}=39$
+\end{itemize}
+So the product is $\begin{matrix}
+    13 & 21 \\ 25 & 39
+\end{matrix}$  
+
+\section{Partition function in QuickSort}
+Initial Array: [13, 9, 5, 7, 3, 1, 10, 6, 11, 2]
+\begin{enumerate}
+    \item p = 1, r = 10, i = p - 1 = 0, x = A[r] = 2
+    \item for j = p = 1 to r-1 = 9: \begin{enumerate}
+        \item A[j] = A[1] = 13 $>$ 2, return: [{\color{red}13}, 9, 5, 7, 3, 1, 10, 6, 11, {\color{blue}2}]
+        \item A[j] = A[2] = 9 $>$ 2, return: [{\color{red}13, 9}, 5, 7, 3, 1, 10, 6, 11, {\color{blue}2}]
+        \item A[j] = A[3] = 5 $>$ 2, return: [{\color{red}13, 9, 5}, 7, 3, 1, 10, 6, 11, {\color{blue}2}]
+        \item A[j] = A[4] = 7 $>$ 2, return: [{\color{red}13, 9, 5, 7}, 3, 1, 10, 6, 11, {\color{blue}2}]
+        \item A[j] = A[5] = 3 $>$ 2, return: [{\color{red}13, 9, 5, 7, 3}, 1, 10, 6, 11, {\color{blue}2}]
+        \item A[j] = A[6] = 1 $<$ 2, i = i+1 = 1, exchange A[i] = A[1] with A[j] = A[6]: [{\color{green}1}, {\color{red}9, 5, 7, 3, 13}, 10, 6, 11, {\color{blue}2}]
+        \item A[j] = A[7] = 10 $>$ 2, return: [{\color{green}1}, {\color{red}9, 5, 7, 3, 13, 10}, 6, 11, {\color{blue}2}]
+        \item A[j] = A[8] = 6 $>$ 2, return: [{\color{green}1}, {\color{red}9, 5, 7, 3, 13, 10, 6}, 11, {\color{blue}2}]
+        \item A[j] = A[9] = 11 $>$ 2, return: [{\color{green}1}, {\color{red}9, 5, 7, 3, 13, 10, 6, 11}, {\color{blue}2}]
+    \end{enumerate}
+    \item exchange A[i+1] = A[2] with A[r] = A[10]: [{\color{green}1}, {\color{blue}2}, {\color{red}9, 5, 7, 3, 13, 10, 6, 11}]
+    \item return i+1 = 2
+\end{enumerate}
+
+\section{Find Algorithm}
+Code: FindValue(A, p, r)
+\begin{lstlisting}
+    if p < r:
+        q = (p+r)/2 // if the result is a decimal, just cut it.
+        if A[q] = q:
+            return q
+        else if A[q] > q:
+            return FindValue(A, p, q)
+        else if A[q] < q:
+            return FindValue(A, q+1, r)
+    else:
+        if A[p] = p:
+            return p
+        else:
+            return -1
+\end{lstlisting}
+Correctness:
+\begin{itemize}
+    \item Loop Invariant: At the state of each iteration of the algorithm, if there is an index meets the requirement, it must be in the subarray A[p, ... , r] 
+    \item Initialization: At the start of the iteration, if A contains more than 2 items, p must be less than r, otherwise just return if the only item A[1] == 1
+    \item Maintenance: if p $<$ r, then let q = (p+r)/2, it's the middle item of the array, then check if A[q] == q \begin{itemize}
+        \item A[q] == q: find the index meets the requirement
+        \item A[q] $>$ q: for every item, its index increases or decreases by 1, but its value can increase or decrease more quickly, and all the integers are distinct, so if there is an index meets the requirement, it can't be bigger than q. Because even though integers increase by 1, it can't equal to its index which increasing at the same speed. Thus FindValue(A, p, q)
+        \item A[q] $<$ q: for every item, its index increases or decreases by 1, but its value can increase or decrease more quickly, and all the integers are distinct, so if there is an index meets the requirement, it can't be less than q. Because even though integers decrease by 1, it can't equal to its index which decreasing at the same speed. Thus FindValue(A, q+1, r)
+    \item Termination: At Termination, if there isn't an index meets the requirement, p will eventually equal to r, and return A[p] == p.
+    \end{itemize}
+\end{itemize}
+Running time Analysis: For every iteration, if the index has been found, just return; if not, exclude half of the array and keep finding in the other half array. So every iteration can reduce the n to $\frac{n}{2}$, $T(n) = 2T(n/2) + T(1)$, by applying master theorem, $T(n) = O (\log n)$
+
+\section{Loaded Die}
+Assume that all the default probability is p, and the die has six faces, then
+\begin{itemize}
+    \item P(1) = $\frac{p}{1}$
+    \item P(2) = $\frac{p}{2}$
+    \item P(3) = $\frac{p}{3}$
+    \item P(4) = $\frac{p}{4}$
+    \item P(5) = $\frac{p}{5}$
+    \item P(6) = $\frac{p}{6}$
+    \item P(1)+P(2)+P(3)+P(4)+P(5)+P(6) = 1
+\end{itemize}
+We can solve that default probability p = $\frac{60}{147}$, so P(greater than 3) = P(4)+P(5)+P(6) = $\frac{37}{147}$
+
+\end{document}

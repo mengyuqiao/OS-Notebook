@@ -1320,4 +1320,147 @@ Implementation of Mutex Using TSL
     \end{itemize}
 \end{enumerate}
 
+\section{Memory Management}
+Ideally programmers want memory that is
+\begin{itemize}
+    \item Large
+    \item Fast
+    \item Persistent
+\end{itemize}
+
+\subsection{Memory Hierarchy}
+\begin{itemize}
+    \item Registers \& Cache: small amount of fast, expensive, volatile memory
+    \item Main memory: some medium-speed, medium price, volatile/persistent memory, DRAM
+    \item Disk \& Tape: Lots of slow, cheap, persistent, storage
+\end{itemize}
+\includegraphics[width=\textwidth]{MemoryHierarchy.png}
+
+\subsection{Relocation and Protection}
+\begin{itemize}
+    \item Problem: A programmer doesn’t know where a program will be loaded in memory \begin{itemize}
+        \item address locations of variables and code routines cannot be absolute
+        \item must keep a program out of other processes’ partitions
+    \end{itemize}
+    \item Solution: Use base and limit values
+    \item Relocation \begin{itemize}
+        \item Address locations in a program are relative
+        \item They are added to a base value to map to physical addresses
+    \end{itemize}
+    \item Protection: Access to address locations larger than limit value results in an error
+\end{itemize}
+\subsection{Swapping}
+\includegraphics[width=\textwidth]{Swapping.png}
+\begin{itemize}
+    \item Physical memory may not be enough to accommodate the needs of all processes
+    \item Memory allocation changes as \begin{itemize}
+        \item processes come into memory
+        \item leave memory and are swapped out to disk
+        \item Re-enter memory by getting swapped-in from disk
+    \end{itemize}
+    \item Shaded regions are unused memory
+\end{itemize}
+\subsection{Paging}
+\begin{itemize}
+    \item Swapping the memory of an entire process is useful when the sum of memory needed by all processes is greater than the total RAM available in the system. 
+    \item But sometimes, a single process might require more memory than the total RAM in the system. 
+    \item In such cases swapping an entire process is not enough. 
+    \item Rather, we need to break up the memory space of a process into smaller equal-sized pieces, called PAGES. 
+    \item OS then decides which pages stay in memory and which get moved to disk.
+    \item \textcolor{red}{Virtual memory}: means that each process gets an illusion that it has more memory than the physical RAM in the system
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{Paging.png}
+\subsection{Memory Management Unit (MMU)}
+\begin{itemize}
+    \item MMU is a hardware module that accompanies the CPU
+    \item It translates the Virtual Address used by executing instructions to Physical Addresses in the main memory
+    \item It need to be very quick so it stands along with CPU
+    \item Steps \begin{enumerate}
+        \item CPU tells MMU the virtual address P it needs
+        \item MMU translante P into P* which is the physical address 
+        \item P* is sent through Bus to the memory controller
+        \item memorry controller get the P* data and send it back by Bus
+    \end{enumerate}
+\end{itemize}
+\includegraphics[width=\textwidth]{MemoryManagementUnit.png}
+\subsection{Size of address space (in bytes) as a function of address size (in bits)}
+\includegraphics[width=\textwidth]{AddressSpaceSize.png}
+\subsection{PageTable}
+\begin{itemize}
+    \item An array that stores the mapping from virtual page numbers to physical numbers
+    \item The OS maintains \begin{itemize}
+        \item \textcolor{blue}{One page table per userspace process}
+        \item And usually another page table for kernel memory
+    \end{itemize}
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{PageTable.png}
+\subsection{Traslate Virtual address (VA) to physical address (PA)}
+\begin{itemize}
+    \item Byte Address = Page Number x Page Size + Byte Offset in the page
+    \item VA = VPN x Page Size + Byte Offset
+    \item PA = PPN x Page Size + Byte Offset
+\end{itemize}
+\includegraphics[width=\textwidth]{VAtoPA.png}
+\subsubsection{Virtual Address Translation For Small Address Space}
+\includegraphics[width=\textwidth]{VATranslationExample.png}
+\begin{itemize}
+    \item The first 12 bits: byte Offset
+    \item The last 4 bits: virtual page number
+    \item Page fault: the absent bit in page table is 0 \begin{itemize}
+        \item OS would fix the entry
+        \item Rerun the instruction
+    \end{itemize}
+    \item Each process has its own page table, it used to need to be load in the MMU, but as the bit of computer grows, the MMU need to be got out to the DRAM. \begin{itemize}
+        \item page table's entry number becomes larger and larger: a 32-bit computer has over 1 million entries for each process's page table, which significantly decreases the speed of switching context.
+        \item the storage cost is too expensive
+    \end{itemize}
+    \item so MMU keeps a pointer(mostly a register) to the DRAM which is the base of physical memory address
+    \item Problem: what if the contiguous memory is hard to find? Different layer of page table
+    \item Problem: what if the translation is inefficient? Store a small page table in MMU in the cache, it's called TLB. If we can find the physical memory in TLB, it's a hit. Otherwise it's a miss, go to DRAM.
+\end{itemize}
+\subsubsection{Virtual Address Translation For Large Address Space}
+\includegraphics[width=\textwidth]{VATranslationExampleBig.png}
+\begin{itemize}
+    \item 32 bit address with 2 page table fields
+    \item Two-level page tables
+    \item PT too Big for MMU: Keep it in main memory
+    \item But how does MMU know where to find PT? Registers (CR2 on Intel)
+\end{itemize}
+\subsection{Typical Page Table Entry (PTE)}
+\includegraphics[width=\textwidth]{PTE.png}
+\begin{itemize}
+    \item Page Frame number = physical page number for the virtual page represented by the PTE
+    \item Referenced bit: Whether the page was accessed since last time the bit was reset.
+    \item Modified bit: Also called "Dirty" bit. Whether the page was written to, since the last time the bit was reset.
+    \item Protection bits: Whether the page is readable? writeable? executable? contains higher privilege code/data?
+    \item Present/Absent bit: Whether the PTE contains a valid page frame number. Used for marking swapped/unallocated pages
+    \item Cashing disabled bit: point to some I/O devices(memory map I/O) rather than memory
+\end{itemize}
+\subsection{TLBs – Translation Lookaside Buffers}
+\includegraphics[width=\textwidth]{TLB.png}
+\begin{itemize}
+    \item TLB is a small cache that speeds up the translation of virtual addresses to physical addresses.
+    \item TLB is part of the MMU hardware (comes with CPU)
+    \item TLB is made of fully associative cache, which could compare all the entries at the same time.
+    \item It is not a Data Cache or Instruction Cache. Those are separate.
+    \item TLB simply caches translations from virtual page number to physical page number so that the MMU don’t have to access page-table in memory too often.
+    \item On older x86 processors, TLB had to be “flushed” upon every context switch because there is no field in TLB to identify the process context. Tagged TLB can reduce this overhead, it use ASID to remember its owner process.
+    \item Spatial Locality: if the process is accessing i byte, it's very likely it will access nearby bytes.
+    \item Temporal Locality: if the process is accessing i byte, it's very likely it will keep accessing i byte in the future
+    \item If CPU do a context switch, all the valid bits will be set to 0, and the new process needs to take some time to get in a new page table. There will be misses at first, but as PLB warms up, it will be hit eventually.
+\end{itemize}
+\subsection{Impact of Page Size on Page tables}
+\subsubsection{Small Page Size}
+\begin{itemize}
+    \item Advantages \begin{itemize}
+        \item less internal fragmentation(space wasted)
+        \item page-in/page-out less expensive
+    \end{itemize}
+    \item Disadvantages \begin{itemize}
+        \item process that needs more pages has larger page table
+        \item Smaller “TLB Coverage” (next slide)
+    \end{itemize}
+\end{itemize}
+
+
 \end{document}
