@@ -1024,13 +1024,22 @@ Implementation of Mutex Using TSL
 \section{Kernel Modules}
 \subsection{Definition}
 \begin{itemize}
-    \item Allow code to be added to the kernel, dynamically 
+    \item Allow code to be added/removed to the kernel, dynamically 
     \item Only those modules that are needed are loaded. Unload when no longer required - frees up memory and other resources 
     \item Reduces kernel size. 
     \item Enables independent development of drivers for different 
+    \item Any kercel module can do anything with full privilege, so it's important to truct the developer before installing a module.
     devices
 \end{itemize}
 \includegraphics[width=\textwidth]{KernelWorking.png}
+\begin{enumerate}
+    \item init\_module: do register
+    \item register\_capability: tell the kernel where to call functions
+    \item OS keep pointers to the capabilities functions
+    \item Get invoced when needed
+    \item unregister\_capability
+    \item cleanup\_module
+\end{enumerate}
 \subsection{Development}
 \subsubsection{Hello World Example}
 \begin{lstlisting}
@@ -1103,6 +1112,7 @@ Implementation of Mutex Using TSL
     \item Module code has: \begin{lstlisting}
         static char *whom = "world";
         static int howmany = 1;
+
         module_param(howmany, int, S_IRUGO);
         module_param(whom, charp, S_IRUGO);
     \end{lstlisting}
@@ -1116,7 +1126,7 @@ Implementation of Mutex Using TSL
     \item Block devices \begin{itemize}
         \item reads/writes in fixed block granularity (hard disks, CD drives)
     \end{itemize}
-    \item Network devices \begin{itemize}
+    \item Network devices: stream of packets \begin{itemize}
         \item message abstraction, send/receive packets of varying sizes (network interface cards)
     \end{itemize}
     \item Others \begin{itemize}
@@ -1458,9 +1468,158 @@ Ideally programmers want memory that is
     \end{itemize}
     \item Disadvantages \begin{itemize}
         \item process that needs more pages has larger page table
-        \item Smaller “TLB Coverage” (next slide)
+        \item Smaller "TLB Coverage" (next slide)
     \end{itemize}
 \end{itemize}
+
+\section{TLB \& TLB Coverage}
+\begin{itemize}
+    \item Working Set: The amount of memory that my program actually needs.
+    \item TLB Coverage: The amount of memory that my TLB has.
+    \item Goal: TLB Coverage $>$ Working Set \begin{itemize}
+        \item increase page size
+        \item increase entry number
+    \end{itemize}
+\end{itemize}
+\subsection{Cold Start Penalty}
+\begin{itemize}
+    \item Cost of repopulating the TLB (and other caches) upon a context switch.
+    \item Immediately after a context switch, all (or many) of TLB entries are invalidated. \begin{itemize}
+        \item On some x86 processors, TLB has to be “flushed” upon every context switch because there is no field in TLB to identify the process context.
+    \end{itemize}
+    \item Every memory access by the newly scheduled process may results in a TLB miss
+    \item MMU must then walk the page-table in main memory to repopulate the missing TLB entry, which takes longer than a cache hit.
+\end{itemize}
+\subsection{TLB Coverage}
+\begin{itemize}
+    \item Max amount of memory mapped by TLB: Max mount of memory that can be accessed without TLB misses
+    \item TLB Coverage = N x P bytes \begin{itemize}
+        \item N = Number of entries in TLB
+        \item P = Page size in bytes
+        \item N is fixed by hardware constraints
+        \item So, to increase TLB Coverage, we must increase P
+    \end{itemize}
+\end{itemize}
+\subsection{Tagged TLB}
+\begin{itemize}
+    \item A "tag" in each TLB entry identifies the process/thread context to which the TLB entry belongs
+    \item Thus TLB entries for more than one execution context can be stored simultaneously in the TLB.
+    \item TLB lookup hardware matches the tag in addition to the virtual page number.
+    \item With tags, context switch no longer requires a complete TLB flush.
+    \item Reduces cold-start penalty.
+\end{itemize}
+\subsection{Two types of memory translation architectures}
+\begin{itemize}
+    \item Architected Page Tables: hardware decides how the page table looks like and determines the way MMU do page table walk \begin{itemize}
+        \item Page table interface defined by ISA and understood by memory translation hardware
+        \item E.g. x86 architecture
+        \item MMU handles TLB miss (in hardware)
+        \item OS handles page faults (in software)
+        \item ISA specifies page table format
+    \end{itemize}
+    \item Architected TLBs: throw an exception when miss rather than do page table walk \begin{itemize}
+        \item TLB interface defined by ISA and understood by MMU
+        \item E.g. alpha architecture
+        \item TLB miss handled by OS (in software)
+        \item ISA does not specify page table format
+    \end{itemize}
+\end{itemize}
+\subsection{Superpages/Hugepages/Largepages}
+\subsubsection{Superpages}
+\begin{itemize}
+    \item Memory pages of larger sizes than standard pages: supported by most modern CPUs
+    \item Superpage size = power of 2 x the base page size
+    \item Only one TLB entry per superpage. But multiple (identical) page-table entries, one per base page
+    \item Constraints: \begin{itemize}
+        \item contiguous (physically and virtually), otherwise the baseless offset mechanism won't work
+        \item aligned (physically and virtually) the super page size: avoid external fragmentation
+        \item uniform protection attributes: only one entry in the TLB only has one protection bit
+        \item one reference bit, one dirty bit
+    \end{itemize}
+\end{itemize}
+\includegraphics[width=\textwidth]{SuperpageTLBExample.png}
+\begin{itemize}
+    \item page table entry \begin{itemize}
+        \item normal page: size 1
+        \item superpage: size n
+    \end{itemize}
+    \item page table virtual page number \begin{itemize}
+        \item normal page: v1
+        \item superpage: all the entries have the same vitrual page number, all the entries are identical.
+    \end{itemize}
+    \item The hundred superpage size four = the first page is the 400 page in the physical memory.
+\end{itemize}
+\subsubsection{Restrictions Examples}
+\begin{itemize}
+    \item Size restrictions \begin{itemize}
+        \item 8KiB = 21 x 4KiB
+        \item 16KiB = 22 x 4KiB
+        \item 32KiB = 23 x 4KiB etc
+    \end{itemize}
+    \item Contiguity restrictions for superpage of size 4 \begin{itemize}
+        \item Possible: Base pages 8,9,10,11 in one superpage
+        \item Impossible: Base pages 8, 10, 20, 22 in one superpage
+    \end{itemize}
+    \item Alignment restrictions for superpage of size 4 \begin{itemize}
+        \item Possible \begin{itemize}
+            \item Base pages 4,5,6,7 in one superpage
+            \item Base pages 8,9,10,11 in one superpage
+            \item Base pages 12,13,14,15 in one superpage
+        \end{itemize}
+        \item Impossible \begin{itemize}
+            \item Base pages 6,7,8,9 in one superpage
+            \item Base pages 13,14,15,16 in one superpage
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+\subsubsection{Problems}
+\begin{enumerate}
+    \item superpage allocation: How / when / what size to allocate? \newline
+    \includegraphics[width=0.9\textwidth]{SuperpageAllocation.png} 
+    \begin{itemize}
+        \item allocate process anywhere and bring them together later, will waste CPU cycles
+        \item reserve some space for some pages assuming that they would be used as a superpage.
+    \end{itemize}
+    \item promotion: create a superpage out of a set of smaller pages. When to promote? \newline
+    \includegraphics[width=0.9\textwidth]{SuperpagePromotion.png} 
+    \begin{itemize}
+        \item wait for the application to touch these pages, avoid promoting the size 4 superpage to size 8, but may lose the opportunity to increase TLB Coverage.
+        \item create a small superpage, may incur some overhead
+        \item forcibally populate pages, may cause I/O cost or increase internal fragmentation
+    \end{itemize}
+    \item demotion: convert a superpage into smaller pages: when page attributes of base pages of a superpage become non-uniform?
+    \item fragmentation \begin{itemize}
+        \item External fragmentation \begin{itemize}
+            \item use of multiple page sizes
+            \item Scattered wired pages
+        \end{itemize}
+        \item Contiguity of free pages is a contended resource \begin{itemize}
+            \item Allocating a superpage requires that sufficient number of contiguous base pages must be free.
+        \end{itemize}
+        \item OS must \begin{itemize}
+            \item use contiguity restoration techniques
+            \item trade off impact of contiguity restoration against superpage benefits
+        \end{itemize}
+    \end{itemize}
+\end{enumerate}
+\subsubsection{Design}
+\begin{enumerate}
+    \item Key observation: Once an application touches the first page of a memory object then it is likely that it will quickly touch every page of that object \begin{itemize}
+        \item Example: array initialization
+        \item Opportunistic policies \begin{itemize}
+            \item superpages as large and as soon as possible
+            \item as long as no penalty if wrong decision
+        \end{itemize}
+        \item Superpage allocation: Preemptible reservations: Assume the process will use a superpage and reserve the space for a short time, if it doesn't, give these space to another process.
+    \end{itemize}
+    \item Allocation: reservation size \begin{itemize}
+        \item Opportunistic policy \begin{itemize}
+            \item Go for biggest size that is no larger than the memory object (e.g., file)
+            \item If required size not available, try preemption before resigning to a smaller size
+        \end{itemize}
+    \end{itemize}
+    \item Incremental promotions: Promotion policy: opportunistic
+\end{enumerate}
 
 
 \end{document}
