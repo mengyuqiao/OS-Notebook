@@ -1027,7 +1027,7 @@ Implementation of Mutex Using TSL
     \item Allow code to be added/removed to the kernel, dynamically 
     \item Only those modules that are needed are loaded. Unload when no longer required - frees up memory and other resources 
     \item Reduces kernel size. 
-    \item Enables independent development of drivers for different 
+    \item Enables independent development of drivers for different devices
     \item Any kercel module can do anything with full privilege, so it's important to truct the developer before installing a module.
     devices
 \end{itemize}
@@ -1472,7 +1472,7 @@ Ideally programmers want memory that is
     \end{itemize}
 \end{itemize}
 
-\section{TLB \& TLB Coverage}
+\section{TLB and TLB Coverage}
 \begin{itemize}
     \item Working Set: The amount of memory that my program actually needs.
     \item TLB Coverage: The amount of memory that my TLB has.
@@ -1619,7 +1619,223 @@ Ideally programmers want memory that is
         \end{itemize}
     \end{itemize}
     \item Incremental promotions: Promotion policy: opportunistic
+    \item Speculative demotions \begin{itemize}
+        \item One reference bit per superpage
+        \item On memory pressure, demote superpages when resetting ref bit
+        \item Re-promote (incrementally) as pages are referenced
+        \item Demote also when the page daemon selects a base page as a victim page
+        \item Dirty superpages \begin{itemize}
+            \item One dirty bit per superpage
+            \item Demote on first write to clean superpage
+            \item Re-promote (incrementally) as other pages are dirtied
+        \end{itemize}
+    \end{itemize}
+    \item Fragmentation control \begin{itemize}
+        \item Low contiguity: modified page daemon for victim selection \begin{itemize}
+            \item restore contiguity: move clean, inactive pages to the free list
+            \item minimize impact: prefer victim pages that contribute the most to contiguity
+        \end{itemize}
+        \item Cluster wired pages \begin{itemize}
+            \item Assign a dedicated region of physical memory for wired pages
+            \item So that they break contiguity for superpage allocations from rest of the memory
+        \end{itemize}
+    \end{itemize}
 \end{enumerate}
 
+\section{The UNIX Time-Sharing System}
+\subsection{UNIX overview}
+\begin{itemize}
+    \item Unix is a general-purpose, multi-user, interactive operating system
+    \item Originally developed for DEC PDP-7, -9, and -11 computers
+    \item Written in C language
+    \item Now widely supported across almost all hardware platforms in various variants: System V, FreeBSD, Linux, Solaris etc
+\end{itemize}
+\subsubsection{Major Innovations}
+\begin{itemize}
+    \item Hierarchical file system 
+    \item Compatible file, device, and inter-process I/O 
+    \item Background (asynchronous) and foreground processes 
+    \item Interactive Shell
+\end{itemize}
+\subsection{File System}
+Most important role of UNIX is to provide a file-system. There are three types of files
+\begin{itemize}
+    \item Ordinary files: No particular structure imposed by OS
+    \item Directories: Mapping between filenames and files
+    \item Special files: I/O devices
+\end{itemize}
+\subsubsection{Hard Links}
+link to the real file.
+\subsubsection{What is a File System?}
+\begin{itemize}
+    \item File system is the OS component that organizes data on the raw storage device. 
+    \item Data, by itself, is just a meaningless sequence of bits and bytes.
+    \item Metadata is the information that describes the data. \begin{itemize}
+        \item Also called attributes. 
+        \item Without meta-data, data itself will be incomprehensible.
+    \end{itemize}
+    \item Responsibilities of a file system \begin{itemize}
+        \item Defines the format of the data objects. 
+        \item Defines the format and meaning of meta-data associated with each data object. E.g. File name, permissions, and size of a file. 
+        \item Manages the location of the individual data blocks of each data object. 
+        \item Manages free space on the storage device.
+    \end{itemize}
+\end{itemize}
+\subsubsection{Virtual File System (VFS)}
+VFS provides
+\begin{itemize}
+    \item A common system call interface to user applications to access different file systems implemented in the OS. 
+    \item A common interface to file systems to “plug into” the operating system and provide services to user applications.
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{VFS.png}
+\subsubsection{Partitions and File-system Layout}
+\includegraphics[width=\textwidth]{PartitionsAndFile-systemLayout.png}
+\subsubsection{Organizing Files on Disk: Contiguous Allocation}
+\includegraphics[width=\textwidth]{ContiguousAllocation.png}
+\subsubsection{Organizing Files on Disk: Singly Linked List of Blocks}
+\includegraphics[width=\textwidth]{SinglyLinkedList.png}
+\begin{itemize}
+    \item Advantage: Logically contiguous blocks can be discontiguous on disk 
+    \item Disadvantage: Random seeks are expensive. Requires traversal from the start.
+\end{itemize}
+\subsubsection{Organizing Files on Disk: File Allocation Table}
+\includegraphics[width=\textwidth]{FileAllocationTable.png}
+\begin{itemize}
+    \item Linked list allocation using a file allocation table in RAM 
+    \item Doesn’t need a separate "next" pointer within each block 
+    \item But random seeks are still expensive
+\end{itemize}
+\subsubsection{i-nodes (index nodes)}
+\begin{itemize}
+    \item Each file is described by an i-node 
+    \item i-node stores the metadata for the file 
+    \item Metadata = file info + location of data blocks 
+    \item i-nodes are stored on the disk 
+    \item An i-node is to a file what a page-table is to a virtual address space \begin{itemize}
+        \item Page table maps: virtual page number in a virtual address space ——> physical page frame number in DRAM 
+        \item i-node maps: logical block number in a file ——> physical block location on disk
+    \end{itemize}
+\end{itemize}
+\subsubsection{Unix i-node (index node)}
+\includegraphics[width=\textwidth]{UnixI-node.png}
+\begin{itemize}
+    \item Small files can be accessed quickly 
+    \item If each block is 4KB \begin{itemize}
+        \item First 48KB of file reachable from 12 direct blocks 
+        \item Next 4MB available from single-indirect blocks
+        \item Next 4GB available from double-indirect blocks 
+        \item Next 4TB available through the triple-indirect blocks
+    \end{itemize} 
+    \item Any block can be found with at most 3 disk accesses
+\end{itemize}
+\subsubsection{Another view of a UNIX i-node}
+\includegraphics[width=\textwidth]{AnotherViewOfUnixI-node.png}
+\begin{itemize}
+    \item The whole data structure above is ONE i-node for ONE file 
+    \item i-node grows dynamically as the file grows 
+    \item Just like page-tables, i-node tracks a giant array broken up into many pieces
+\end{itemize}
+\subsubsection{Special files}
+\begin{itemize}
+    \item "most unusual feature" 
+    \item Located in /dev Just like ordinary files. 
+    \item But read/write requests result in activation of the associated device. 
+    \item Advantages of treating I/O devices as files \begin{itemize}
+        \item File and device I/O are similar
+        \item File and device names have same syntax and meaning.
+        \item Programs that operate on files can also operate on devices.
+        \item Same protection mechanisms as regular files
+    \end{itemize}
+\end{itemize}
+\subsubsection{Removable file system}
+\begin{itemize}
+    \item Different parts of filesystem can be on different devices 
+    \item mount: Allows a storage device to be referenced as a subtree of existing rooted file system.
+    \item Hard links across mounted file systems disallowed. Because hard links happen on the level of i-node, and different file systems have different ways of representing i-node.
+\end{itemize}
+\subsubsection{Protection}
+\begin{itemize}
+    \item Each user has a userid
+    \item Files marked as owned with userid of the creator
+    \item Seven protection bits \begin{itemize}
+        \item Six bits for read, write, and execute permissions for user, group, and others
+        \item 7th bit → set-user-ID bit \begin{itemize}
+            \item Temporarily change the userid of current user to the owner when file is executed as a program.
+            \item Allows the safe use of privileged programs that require access to special system files (e.g. system logs).
+            \item Actual userid of the invoker is available to the program for credential checks.
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+\subsubsection{I/O calls}
+\begin{itemize}
+    \item filep = open (name, flag): Create system call creates and opens a new file. Truncates to zero if file exists. filep is a file descriptor. Notion of a file descriptor hasn’t changed over the years
+    \item No locking provided by OS for multi-user access \begin{itemize}
+        \item Lets users figure out synchronization. 
+        \item Locks are “neither necessary nor sufficient”. Why?
+        \item Internal OS locks for consistency of data structures
+    \end{itemize} 
+    \item n = read(filep, buffer, count): Read returns 0 when end of file (EOF) reached 
+    \item n = write(filep, buffer, count): Write beyond end of file grows the file automatically 
+    \item location = seek(filep, base, offset): For random I/O
+\end{itemize}
+\subsubsection{Processes and images}
+\begin{itemize}
+    \item processid = fork(label) 
+    \item filep = pipe( ) 
+    \item execute(file, args, argo, ..., arg,+) 
+    \item processid = wait( ) 
+    \item exit (status)
+\end{itemize}
+\subsubsection{Shell}
+\begin{itemize}
+    \item Triggered upon login by the init process 
+    \item Can be replaced by other commands: command arg1 arg2 • • - argn 
+    \item ls > there 
+    \item ed < script 
+    \item Filters: ls | grep foo | wc -l 
+    \item Multitasking \begin{itemize}
+        \item ls; ed
+        \item as source > output \&
+        \item as source > output \& ls > files \&
+        \item (date; ls) > x \&
+    \end{itemize}
+\end{itemize}
+\subsubsection{read/write buffering}
+\begin{itemize}
+    \item System buffers to hide block I/O activity 
+    \item Users can read/write at any byte granularity 
+    \item OS converts these to block-level I/O
+    \item Disadvantage: if the power fails, all the data on the memory would be lost.
+    \item Advantage: save IO resource
+\end{itemize}
+\subsection{File System Cache}
+\includegraphics[width=0.8\textwidth]{FileSystemCache.png}
+\newline
+FS Cache is a part of main memory used to store frequently accessed data blocks from the disk
+\subsubsection{How it works}
+\includegraphics[width=0.8\textwidth]{HowFileSystemCacheWork.png}
+\begin{itemize}
+    \item Before accessing the disk, look in the FS cache. 
+    \item If data block is in FS cache, no need to go to disk. 
+    \item Periodically, purge the cache of infrequently used data blocks.
+    \item Readahead: If application asks for block i, cache would automatically read i+1, i+2, i+3... block.
+    \item Disk also do readahead to its disk cache
+\end{itemize}
+Claim: If the cache works well, then most I/O accesses to the physical disk will be writes. Why?
+\subsubsection{Data Structure for File-System Cache}
+\includegraphics[width=0.8\textwidth]{FileSystemCacheDataStructure.png}
+\subsubsection{Log-Structured File Systems}
+\begin{itemize}
+    \item With CPUs faster, memory larger \begin{itemize}
+        \item disk caches are also getting larger 
+        \item increasing number of read requests come from file system cache 
+        \item Thus, most disk accesses will be writes
+    \end{itemize}
+    \item LFS treats the entire disk as a log \begin{itemize}
+        \item all writes are initially buffered in memory 
+        \item periodically commit the writes to the end of the disk log 
+        \item When file is opened, locate i-node, then find blocks
+    \end{itemize}
+\end{itemize}
 
 \end{document}

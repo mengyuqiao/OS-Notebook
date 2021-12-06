@@ -1,133 +1,158 @@
-\contentsline {section}{\numberline {1}Overview}{6}{section.1}%
-\contentsline {subsection}{\numberline {1.1}What?}{6}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Why?}{6}{subsection.1.2}%
-\contentsline {subsection}{\numberline {1.3}How}{7}{subsection.1.3}%
-\contentsline {subsubsection}{\numberline {1.3.1}Virtualization}{7}{subsubsection.1.3.1}%
-\contentsline {subsubsection}{\numberline {1.3.2}How to invoke OS code?}{7}{subsubsection.1.3.2}%
-\contentsline {subsection}{\numberline {1.4}Interface}{8}{subsection.1.4}%
-\contentsline {subsubsection}{\numberline {1.4.1}Explaination}{8}{subsubsection.1.4.1}%
-\contentsline {subsubsection}{\numberline {1.4.2}Interfaces in a Computer System}{9}{subsubsection.1.4.2}%
-\contentsline {subsection}{\numberline {1.5}History}{9}{subsection.1.5}%
-\contentsline {section}{\numberline {2}Processes}{10}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Process}{10}{subsection.2.1}%
-\contentsline {subsubsection}{\numberline {2.1.1}What?}{10}{subsubsection.2.1.1}%
-\contentsline {subsubsection}{\numberline {2.1.2}Process versus Program}{10}{subsubsection.2.1.2}%
-\contentsline {subsubsection}{\numberline {2.1.3}Constitution}{10}{subsubsection.2.1.3}%
-\contentsline {subsubsection}{\numberline {2.1.4}Memory layout}{11}{subsubsection.2.1.4}%
-\contentsline {subsection}{\numberline {2.2}System calls}{11}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Lifecycle}{12}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Special Process}{13}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}Cold-start Penalty}{13}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}Context Switch}{13}{subsection.2.6}%
-\contentsline {section}{\numberline {3}Inter-Process Communication}{13}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Overview}{13}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Pipe}{14}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Abstraction}{14}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Parent-Child Communication Using Pipe}{14}{subsubsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.3}File-Descriptor Table}{14}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}Redirect Std to a File}{15}{subsubsection.3.2.4}%
-\contentsline {subsubsection}{\numberline {3.2.5}Handling Chain of Filters Using Pipe}{17}{subsubsection.3.2.5}%
-\contentsline {subsubsection}{\numberline {3.2.6}Byte-stream versus Message}{18}{subsubsection.3.2.6}%
-\contentsline {subsubsection}{\numberline {3.2.7}Error Handling}{18}{subsubsection.3.2.7}%
-\contentsline {subsection}{\numberline {3.3}Signals}{19}{subsection.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.1}Overview}{19}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}Handling Signals}{20}{subsubsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {3.3.3}SIGCHLD}{20}{subsubsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.4}Shared Memory}{21}{subsection.3.4}%
-\contentsline {subsubsection}{\numberline {3.4.1}Overview}{21}{subsubsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {3.4.2}Creating}{22}{subsubsection.3.4.2}%
-\contentsline {subsubsection}{\numberline {3.4.3}Attach and Detach}{23}{subsubsection.3.4.3}%
-\contentsline {subsubsection}{\numberline {3.4.4}Deleting}{25}{subsubsection.3.4.4}%
-\contentsline {subsubsection}{\numberline {3.4.5}Command}{26}{subsubsection.3.4.5}%
-\contentsline {section}{\numberline {4}Threads}{26}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Problem}{26}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Solution}{27}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Event-driven programming}{27}{subsubsection.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2}Threads}{27}{subsubsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.3}Threads}{27}{subsection.4.3}%
-\contentsline {subsubsection}{\numberline {4.3.1}Address space layout}{28}{subsubsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.2}Advantages}{28}{subsubsection.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.3.3}Disadvantages}{29}{subsubsection.4.3.3}%
-\contentsline {subsubsection}{\numberline {4.3.4}Types of Threads}{29}{subsubsection.4.3.4}%
-\contentsline {subsubsection}{\numberline {4.3.5}Scheduling}{31}{subsubsection.4.3.5}%
-\contentsline {subsubsection}{\numberline {4.3.6}Thread Creation and Termination}{32}{subsubsection.4.3.6}%
-\contentsline {subsubsection}{\numberline {4.3.7}Code}{33}{subsubsection.4.3.7}%
-\contentsline {subsubsection}{\numberline {4.3.8}pthread Synchronization Operations}{34}{subsubsection.4.3.8}%
-\contentsline {section}{\numberline {5}Concurrency}{34}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Overview}{34}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Critical Section}{35}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Race Condition and Deadlocks}{35}{subsection.5.3}%
-\contentsline {subsubsection}{\numberline {5.3.1}Mutual Exclusion}{35}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}Conditions for correct mutual exclusion}{36}{subsubsection.5.3.2}%
-\contentsline {subsubsection}{\numberline {5.3.3}Typs of Locks}{36}{subsubsection.5.3.3}%
-\contentsline {subsubsection}{\numberline {5.3.4}Best practices for locking}{38}{subsubsection.5.3.4}%
-\contentsline {subsubsection}{\numberline {5.3.5}Deadlock Solution}{38}{subsubsection.5.3.5}%
-\contentsline {subsubsection}{\numberline {5.3.6}Priority Inversion}{39}{subsubsection.5.3.6}%
-\contentsline {subsubsection}{\numberline {5.3.7}Interrupts and Locks}{40}{subsubsection.5.3.7}%
-\contentsline {subsubsection}{\numberline {5.3.8}Interrupts and Deadlocks — Problem}{40}{subsubsection.5.3.8}%
-\contentsline {subsubsection}{\numberline {5.3.9}Interrupts and Deadlocks — Solutions}{41}{subsubsection.5.3.9}%
-\contentsline {section}{\numberline {6}Semaphores, Condition Variables, Producer Consumer Problem}{41}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Semaphores}{41}{subsection.6.1}%
-\contentsline {subsubsection}{\numberline {6.1.1}Definition}{41}{subsubsection.6.1.1}%
-\contentsline {subsubsection}{\numberline {6.1.2}DOWN(sem) Operation}{42}{subsubsection.6.1.2}%
-\contentsline {subsubsection}{\numberline {6.1.3}UP(sem) Operation}{42}{subsubsection.6.1.3}%
-\contentsline {subsubsection}{\numberline {6.1.4}Mutex}{43}{subsubsection.6.1.4}%
-\contentsline {subsection}{\numberline {6.2}Producer-Consumer Problem}{43}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}Definition}{43}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}Solution}{44}{subsubsection.6.2.2}%
-\contentsline {subsubsection}{\numberline {6.2.3}Using Semaphore}{44}{subsubsection.6.2.3}%
-\contentsline {subsubsection}{\numberline {6.2.4}POSIX interface}{44}{subsubsection.6.2.4}%
-\contentsline {subsection}{\numberline {6.3}Monitors and Condition Variables}{45}{subsection.6.3}%
-\contentsline {subsubsection}{\numberline {6.3.1}Definition}{45}{subsubsection.6.3.1}%
-\contentsline {subsubsection}{\numberline {6.3.2}P-C problem with monitors and condition variables}{46}{subsubsection.6.3.2}%
-\contentsline {subsection}{\numberline {6.4}Atomic Locking – TSL Instruction}{46}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Kernel Modules}{47}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Definition}{47}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Development}{49}{subsection.7.2}%
-\contentsline {subsubsection}{\numberline {7.2.1}Hello World Example}{49}{subsubsection.7.2.1}%
-\contentsline {subsubsection}{\numberline {7.2.2}Compile}{49}{subsubsection.7.2.2}%
-\contentsline {subsubsection}{\numberline {7.2.3}Module Utilities}{49}{subsubsection.7.2.3}%
-\contentsline {subsubsection}{\numberline {7.2.4}Things to Remember}{50}{subsubsection.7.2.4}%
-\contentsline {subsubsection}{\numberline {7.2.5}Concurrency Issues}{50}{subsubsection.7.2.5}%
-\contentsline {subsubsection}{\numberline {7.2.6}Error Handling}{51}{subsubsection.7.2.6}%
-\contentsline {subsubsection}{\numberline {7.2.7}Module Parameters}{51}{subsubsection.7.2.7}%
-\contentsline {subsection}{\numberline {7.3}Character devices in Linux}{52}{subsection.7.3}%
-\contentsline {subsubsection}{\numberline {7.3.1}Device Classification}{52}{subsubsection.7.3.1}%
-\contentsline {subsubsection}{\numberline {7.3.2}"Miscellaneous" Devices in Linux}{52}{subsubsection.7.3.2}%
-\contentsline {subsubsection}{\numberline {7.3.3}Implementing a device driver for a miscellaneous device}{52}{subsubsection.7.3.3}%
-\contentsline {subsubsection}{\numberline {7.3.4}How do file ops work on character devices}{54}{subsubsection.7.3.4}%
-\contentsline {subsubsection}{\numberline {7.3.5}Moving data in and out of the Kernel}{55}{subsubsection.7.3.5}%
-\contentsline {subsubsection}{\numberline {7.3.6}Memory allocation/deallocation in Kernel}{55}{subsubsection.7.3.6}%
-\contentsline {section}{\numberline {8}System Calls}{56}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Definition}{56}{subsection.8.1}%
-\contentsline {subsubsection}{\numberline {8.1.1}System Call table}{56}{subsubsection.8.1.1}%
-\contentsline {subsubsection}{\numberline {8.1.2}System Call Invocation}{57}{subsubsection.8.1.2}%
-\contentsline {subsection}{\numberline {8.2}Syscall Usage}{58}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Implementing}{59}{subsection.8.3}%
-\contentsline {subsubsection}{\numberline {8.3.1}Steps in Writing a System Call}{59}{subsubsection.8.3.1}%
-\contentsline {subsubsection}{\numberline {8.3.2}Code}{59}{subsubsection.8.3.2}%
-\contentsline {section}{\numberline {9}Memory Management}{61}{section.9}%
-\contentsline {subsection}{\numberline {9.1}Memory Hierarchy}{61}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}Relocation and Protection}{62}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}Swapping}{62}{subsection.9.3}%
-\contentsline {subsection}{\numberline {9.4}Paging}{63}{subsection.9.4}%
-\contentsline {subsection}{\numberline {9.5}Memory Management Unit (MMU)}{64}{subsection.9.5}%
-\contentsline {subsection}{\numberline {9.6}Size of address space (in bytes) as a function of address size (in bits)}{65}{subsection.9.6}%
-\contentsline {subsection}{\numberline {9.7}PageTable}{66}{subsection.9.7}%
-\contentsline {subsection}{\numberline {9.8}Traslate Virtual address (VA) to physical address (PA)}{66}{subsection.9.8}%
-\contentsline {subsubsection}{\numberline {9.8.1}Virtual Address Translation For Small Address Space}{68}{subsubsection.9.8.1}%
-\contentsline {subsubsection}{\numberline {9.8.2}Virtual Address Translation For Large Address Space}{69}{subsubsection.9.8.2}%
-\contentsline {subsection}{\numberline {9.9}Typical Page Table Entry (PTE)}{70}{subsection.9.9}%
-\contentsline {subsection}{\numberline {9.10}TLBs – Translation Lookaside Buffers}{71}{subsection.9.10}%
-\contentsline {subsection}{\numberline {9.11}Impact of Page Size on Page tables}{72}{subsection.9.11}%
-\contentsline {subsubsection}{\numberline {9.11.1}Small Page Size}{72}{subsubsection.9.11.1}%
-\contentsline {section}{\numberline {10}TLB \& TLB Coverage}{72}{section.10}%
-\contentsline {subsection}{\numberline {10.1}Cold Start Penalty}{72}{subsection.10.1}%
-\contentsline {subsection}{\numberline {10.2}TLB Coverage}{73}{subsection.10.2}%
-\contentsline {subsection}{\numberline {10.3}Tagged TLB}{73}{subsection.10.3}%
-\contentsline {subsection}{\numberline {10.4}Two types of memory translation architectures}{73}{subsection.10.4}%
-\contentsline {subsection}{\numberline {10.5}Superpages/Hugepages/Largepages}{74}{subsection.10.5}%
-\contentsline {subsubsection}{\numberline {10.5.1}Superpages}{74}{subsubsection.10.5.1}%
-\contentsline {subsubsection}{\numberline {10.5.2}Restrictions Examples}{75}{subsubsection.10.5.2}%
-\contentsline {subsubsection}{\numberline {10.5.3}Problems}{76}{subsubsection.10.5.3}%
-\contentsline {subsubsection}{\numberline {10.5.4}Design}{77}{subsubsection.10.5.4}%
+\contentsline {section}{\numberline {1}Overview}{7}{section.1}%
+\contentsline {subsection}{\numberline {1.1}What?}{7}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Why?}{7}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}How}{8}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}Virtualization}{8}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2}How to invoke OS code?}{8}{subsubsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.4}Interface}{9}{subsection.1.4}%
+\contentsline {subsubsection}{\numberline {1.4.1}Explaination}{9}{subsubsection.1.4.1}%
+\contentsline {subsubsection}{\numberline {1.4.2}Interfaces in a Computer System}{10}{subsubsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.5}History}{10}{subsection.1.5}%
+\contentsline {section}{\numberline {2}Processes}{11}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Process}{11}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}What?}{11}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Process versus Program}{11}{subsubsection.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.1.3}Constitution}{11}{subsubsection.2.1.3}%
+\contentsline {subsubsection}{\numberline {2.1.4}Memory layout}{12}{subsubsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.2}System calls}{12}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Lifecycle}{13}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Special Process}{14}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Cold-start Penalty}{14}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Context Switch}{14}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Inter-Process Communication}{14}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Overview}{14}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Pipe}{15}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Abstraction}{15}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Parent-Child Communication Using Pipe}{15}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}File-Descriptor Table}{15}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Redirect Std to a File}{16}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Handling Chain of Filters Using Pipe}{18}{subsubsection.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.2.6}Byte-stream versus Message}{19}{subsubsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.7}Error Handling}{19}{subsubsection.3.2.7}%
+\contentsline {subsection}{\numberline {3.3}Signals}{20}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Overview}{20}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Handling Signals}{21}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}SIGCHLD}{21}{subsubsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.4}Shared Memory}{22}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Overview}{22}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Creating}{23}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Attach and Detach}{24}{subsubsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.4}Deleting}{26}{subsubsection.3.4.4}%
+\contentsline {subsubsection}{\numberline {3.4.5}Command}{27}{subsubsection.3.4.5}%
+\contentsline {section}{\numberline {4}Threads}{27}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Problem}{27}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Solution}{28}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Event-driven programming}{28}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Threads}{28}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}Threads}{28}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Address space layout}{29}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Advantages}{29}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Disadvantages}{30}{subsubsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.3.4}Types of Threads}{30}{subsubsection.4.3.4}%
+\contentsline {subsubsection}{\numberline {4.3.5}Scheduling}{32}{subsubsection.4.3.5}%
+\contentsline {subsubsection}{\numberline {4.3.6}Thread Creation and Termination}{33}{subsubsection.4.3.6}%
+\contentsline {subsubsection}{\numberline {4.3.7}Code}{34}{subsubsection.4.3.7}%
+\contentsline {subsubsection}{\numberline {4.3.8}pthread Synchronization Operations}{35}{subsubsection.4.3.8}%
+\contentsline {section}{\numberline {5}Concurrency}{35}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Overview}{35}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Critical Section}{36}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Race Condition and Deadlocks}{36}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Mutual Exclusion}{36}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Conditions for correct mutual exclusion}{37}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Typs of Locks}{37}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Best practices for locking}{39}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}Deadlock Solution}{39}{subsubsection.5.3.5}%
+\contentsline {subsubsection}{\numberline {5.3.6}Priority Inversion}{40}{subsubsection.5.3.6}%
+\contentsline {subsubsection}{\numberline {5.3.7}Interrupts and Locks}{41}{subsubsection.5.3.7}%
+\contentsline {subsubsection}{\numberline {5.3.8}Interrupts and Deadlocks — Problem}{41}{subsubsection.5.3.8}%
+\contentsline {subsubsection}{\numberline {5.3.9}Interrupts and Deadlocks — Solutions}{42}{subsubsection.5.3.9}%
+\contentsline {section}{\numberline {6}Semaphores, Condition Variables, Producer Consumer Problem}{42}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Semaphores}{42}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Definition}{42}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}DOWN(sem) Operation}{43}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}UP(sem) Operation}{43}{subsubsection.6.1.3}%
+\contentsline {subsubsection}{\numberline {6.1.4}Mutex}{44}{subsubsection.6.1.4}%
+\contentsline {subsection}{\numberline {6.2}Producer-Consumer Problem}{44}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Definition}{44}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Solution}{45}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Using Semaphore}{45}{subsubsection.6.2.3}%
+\contentsline {subsubsection}{\numberline {6.2.4}POSIX interface}{45}{subsubsection.6.2.4}%
+\contentsline {subsection}{\numberline {6.3}Monitors and Condition Variables}{46}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Definition}{46}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}P-C problem with monitors and condition variables}{47}{subsubsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.4}Atomic Locking – TSL Instruction}{47}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Kernel Modules}{48}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Definition}{48}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Development}{50}{subsection.7.2}%
+\contentsline {subsubsection}{\numberline {7.2.1}Hello World Example}{50}{subsubsection.7.2.1}%
+\contentsline {subsubsection}{\numberline {7.2.2}Compile}{50}{subsubsection.7.2.2}%
+\contentsline {subsubsection}{\numberline {7.2.3}Module Utilities}{50}{subsubsection.7.2.3}%
+\contentsline {subsubsection}{\numberline {7.2.4}Things to Remember}{51}{subsubsection.7.2.4}%
+\contentsline {subsubsection}{\numberline {7.2.5}Concurrency Issues}{51}{subsubsection.7.2.5}%
+\contentsline {subsubsection}{\numberline {7.2.6}Error Handling}{52}{subsubsection.7.2.6}%
+\contentsline {subsubsection}{\numberline {7.2.7}Module Parameters}{52}{subsubsection.7.2.7}%
+\contentsline {subsection}{\numberline {7.3}Character devices in Linux}{53}{subsection.7.3}%
+\contentsline {subsubsection}{\numberline {7.3.1}Device Classification}{53}{subsubsection.7.3.1}%
+\contentsline {subsubsection}{\numberline {7.3.2}"Miscellaneous" Devices in Linux}{53}{subsubsection.7.3.2}%
+\contentsline {subsubsection}{\numberline {7.3.3}Implementing a device driver for a miscellaneous device}{53}{subsubsection.7.3.3}%
+\contentsline {subsubsection}{\numberline {7.3.4}How do file ops work on character devices}{55}{subsubsection.7.3.4}%
+\contentsline {subsubsection}{\numberline {7.3.5}Moving data in and out of the Kernel}{56}{subsubsection.7.3.5}%
+\contentsline {subsubsection}{\numberline {7.3.6}Memory allocation/deallocation in Kernel}{56}{subsubsection.7.3.6}%
+\contentsline {section}{\numberline {8}System Calls}{57}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Definition}{57}{subsection.8.1}%
+\contentsline {subsubsection}{\numberline {8.1.1}System Call table}{57}{subsubsection.8.1.1}%
+\contentsline {subsubsection}{\numberline {8.1.2}System Call Invocation}{58}{subsubsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.2}Syscall Usage}{59}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Implementing}{60}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}Steps in Writing a System Call}{60}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}Code}{60}{subsubsection.8.3.2}%
+\contentsline {section}{\numberline {9}Memory Management}{62}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Memory Hierarchy}{62}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Relocation and Protection}{63}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Swapping}{63}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Paging}{64}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Memory Management Unit (MMU)}{65}{subsection.9.5}%
+\contentsline {subsection}{\numberline {9.6}Size of address space (in bytes) as a function of address size (in bits)}{66}{subsection.9.6}%
+\contentsline {subsection}{\numberline {9.7}PageTable}{67}{subsection.9.7}%
+\contentsline {subsection}{\numberline {9.8}Traslate Virtual address (VA) to physical address (PA)}{67}{subsection.9.8}%
+\contentsline {subsubsection}{\numberline {9.8.1}Virtual Address Translation For Small Address Space}{69}{subsubsection.9.8.1}%
+\contentsline {subsubsection}{\numberline {9.8.2}Virtual Address Translation For Large Address Space}{70}{subsubsection.9.8.2}%
+\contentsline {subsection}{\numberline {9.9}Typical Page Table Entry (PTE)}{71}{subsection.9.9}%
+\contentsline {subsection}{\numberline {9.10}TLBs – Translation Lookaside Buffers}{72}{subsection.9.10}%
+\contentsline {subsection}{\numberline {9.11}Impact of Page Size on Page tables}{73}{subsection.9.11}%
+\contentsline {subsubsection}{\numberline {9.11.1}Small Page Size}{73}{subsubsection.9.11.1}%
+\contentsline {section}{\numberline {10}TLB and TLB Coverage}{73}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Cold Start Penalty}{73}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}TLB Coverage}{74}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Tagged TLB}{74}{subsection.10.3}%
+\contentsline {subsection}{\numberline {10.4}Two types of memory translation architectures}{74}{subsection.10.4}%
+\contentsline {subsection}{\numberline {10.5}Superpages/Hugepages/Largepages}{75}{subsection.10.5}%
+\contentsline {subsubsection}{\numberline {10.5.1}Superpages}{75}{subsubsection.10.5.1}%
+\contentsline {subsubsection}{\numberline {10.5.2}Restrictions Examples}{76}{subsubsection.10.5.2}%
+\contentsline {subsubsection}{\numberline {10.5.3}Problems}{77}{subsubsection.10.5.3}%
+\contentsline {subsubsection}{\numberline {10.5.4}Design}{78}{subsubsection.10.5.4}%
+\contentsline {section}{\numberline {11}The UNIX Time-Sharing System}{80}{section.11}%
+\contentsline {subsection}{\numberline {11.1}UNIX overview}{80}{subsection.11.1}%
+\contentsline {subsubsection}{\numberline {11.1.1}Major Innovations}{80}{subsubsection.11.1.1}%
+\contentsline {subsection}{\numberline {11.2}File System}{80}{subsection.11.2}%
+\contentsline {subsubsection}{\numberline {11.2.1}Hard Links}{81}{subsubsection.11.2.1}%
+\contentsline {subsubsection}{\numberline {11.2.2}What is a File System?}{81}{subsubsection.11.2.2}%
+\contentsline {subsubsection}{\numberline {11.2.3}Virtual File System (VFS)}{81}{subsubsection.11.2.3}%
+\contentsline {subsubsection}{\numberline {11.2.4}Partitions and File-system Layout}{82}{subsubsection.11.2.4}%
+\contentsline {subsubsection}{\numberline {11.2.5}Organizing Files on Disk: Contiguous Allocation}{83}{subsubsection.11.2.5}%
+\contentsline {subsubsection}{\numberline {11.2.6}Organizing Files on Disk: Singly Linked List of Blocks}{83}{subsubsection.11.2.6}%
+\contentsline {subsubsection}{\numberline {11.2.7}Organizing Files on Disk: File Allocation Table}{84}{subsubsection.11.2.7}%
+\contentsline {subsubsection}{\numberline {11.2.8}i-nodes (index nodes)}{85}{subsubsection.11.2.8}%
+\contentsline {subsubsection}{\numberline {11.2.9}Unix i-node (index node)}{86}{subsubsection.11.2.9}%
+\contentsline {subsubsection}{\numberline {11.2.10}Another view of a UNIX i-node}{87}{subsubsection.11.2.10}%
+\contentsline {subsubsection}{\numberline {11.2.11}Special files}{87}{subsubsection.11.2.11}%
+\contentsline {subsubsection}{\numberline {11.2.12}Removable file system}{88}{subsubsection.11.2.12}%
+\contentsline {subsubsection}{\numberline {11.2.13}Protection}{88}{subsubsection.11.2.13}%
+\contentsline {subsubsection}{\numberline {11.2.14}I/O calls}{88}{subsubsection.11.2.14}%
+\contentsline {subsubsection}{\numberline {11.2.15}Processes and images}{89}{subsubsection.11.2.15}%
+\contentsline {subsubsection}{\numberline {11.2.16}Shell}{89}{subsubsection.11.2.16}%
+\contentsline {subsubsection}{\numberline {11.2.17}read/write buffering}{90}{subsubsection.11.2.17}%
+\contentsline {subsection}{\numberline {11.3}File System Cache}{90}{subsection.11.3}%
+\contentsline {subsubsection}{\numberline {11.3.1}How it works}{91}{subsubsection.11.3.1}%
+\contentsline {subsubsection}{\numberline {11.3.2}Data Structure for File-System Cache}{91}{subsubsection.11.3.2}%
+\contentsline {subsubsection}{\numberline {11.3.3}Log-Structured File Systems}{91}{subsubsection.11.3.3}%
