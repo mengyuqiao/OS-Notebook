@@ -1838,4 +1838,122 @@ Claim: If the cache works well, then most I/O accesses to the physical disk will
     \end{itemize}
 \end{itemize}
 
+\section{Raid}
+\subsection{RAID — Original Motivation}
+\begin{itemize}
+    \item Replacing large and expensive mainframe hard drives (IBM 3310) by several cheaper Winchester disk drives 
+    \item Will work but introduces a data reliability problem: \begin{itemize}
+        \item Consider Mean Time To Failure (MTTF) 
+        \item Assume MTTF of a disk drive is 30,000 hours 
+        \item MTTF for a set of n drives is 30,000/n, n = 10 means MTTF of 3,000 hours
+    \end{itemize}
+\end{itemize}
+\subsection{RAID — Today’s Motivation}
+\begin{itemize}
+    \item "Cheap" hard drives are now big enough for most applications
+    \item We use RAID today for \begin{itemize}
+        \item Increasing disk throughput(bandwidth) by allowing parallel access
+        \item Eliminating the need to make disk backups: Disks are too big to be backed up efficiently
+    \end{itemize}
+\end{itemize}
+\subsection{Logical-to-Physical I/O Address Space Mapping}
+\includegraphics[width=\textwidth]{LogicalToPhysicalAddressSpaceMapping.png}
+Logical I/O Space: virtual disk
+\newline
+Software/Firmware Based mapping: Raid
+\subsection{Several Levels of RAID}
+\includegraphics[width=0.8\textwidth]{RaidLevels.png}
+\subsubsection{RAID 0}
+\begin{itemize}
+    \item Striping: Spread the data over multiple disk drives
+    \item No fault tolerance
+    \item But, much better I/O throughput: Number of I/O operations per second
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{Raid0.png}
+\subsubsection{RAID 1}
+\begin{itemize}
+    \item Mirroring: Two copies of each disk block
+    \item Advantage: \begin{itemize}
+        \item Simple to implement
+        \item Fault-tolerant
+    \end{itemize}
+    \item Requires twice the disk capacity
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{Raid1.png}
+\subsubsection{RAID 2}
+\begin{itemize}
+    \item Use an error (detection + correction) code instead of duplicating the data blocks 
+    \item Meant for disks that don’t have built-in error detection. 
+    \item Modern disks support built-in error detection, so this level is mostly unused.
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{Raid2.png}
+\subsubsection{RAID 3}
+\begin{itemize}
+    \item N+1 disk drives: N data drives + 1 parity drive
+    \item Data Block b[k] partitioned into N fragments b[k,1], b[k,2], ... b[k,N] 
+    \item Parity drive contains XOR (exclusive or) of these N fragments: p[k] = b[k,1] XOR b[k,2] XOR ... XOR b[k,N] 
+    \item Upon a failure, reconstruct the lost fragments by XOR of corresponding fragments from remaining drives. b[k,i] = p[k] XOR b[k,1] XOR ... b[k,i-1] XOR b[k,i+1] … XOR b[k,N] 
+    \item Simple to implement in firmware/software 
+    \item Permits only one I/O operation at a time over entire array
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{Raid3.png}
+\subsubsection{RAID 4}
+\begin{itemize}
+    \item Requires N+1 disk drives (as in RAID 3): N data drives + 1 Parity drive 
+    \item Data striped at block granularity (as in RAID 0): Disk 1 has block 1, disk 2 has block 2, and so on. 
+    \item Parity drive contains exclusive or of the N blocks in stripe: p[k] = b[Nk] XOR b[Nk+1] XOR ... XOR b[Nk+N-1] 
+    \item Multiple Read I/O operations can be processed in parallel 
+    \item But how about parallel writes I/O operations?
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{Raid4.png}
+\subsubsection{RAID 5}
+\begin{itemize}
+    \item Single parity drive of RAID-4 is involved in every write \begin{itemize}
+        \item Will limit write parallelism 
+        \item Exercises one parity disk more than others
+    \end{itemize} 
+    \item Solution in RAID-5: Distribute the parity blocks among all N+1 drives 
+    \item Up to N/2 parallel writes
+\end{itemize}
+\includegraphics[width=0.6\textwidth]{Raid5.png}
+\subsection{The write problem}
+Every time a block is updated, the parity must be updated as well.
+\subsubsection{Naive Solution}
+\begin{itemize}
+    \item Assume we want to update the kth block bkold to bknew 
+    \item Before writing bknew: pold = b0old XOR b1old XOR ... bkold … XOR bNold
+    \item After writing bknew , we can naively recompute pnew as follows: pnew = b0old XOR b1old XOR ... bknew … XOR bNold
+    \item The overhead is high \begin{itemize}
+        \item N-1 reads: Read all old data blocks except the block being written (bknew)
+        \item 2 writes: bknew and pnew
+    \end{itemize}
+\end{itemize}
+\subsubsection{Smarter Solution}
+\begin{itemize}
+    \item Assume we want to update the kth block bkold to bknew 
+    \item Before writing bknew: (A) pold = b0old XOR b1old XOR ... bkold … XOR bNold 
+    \item Moving bkold to left hand side: (B) pold XOR bkold = b0old XOR b1old XOR ... XOR bNold
+    \item Naive solution to compute pnew: (C) pnew = b0old XOR b1old XOR ... bknew … XOR bNold 
+    \item Moving bknew to left hand side: (D) pnew XOR bknew = b0old XOR b1old XOR ... XOR bNold 
+    \item Combining (B) and (D): (E) pnew XOR bknew = pold XOR bkold
+    \item Smarter solution: moving bknew to right hand side: pnew = bknew XOR pold XOR bkold \begin{itemize}
+        \item 2 reads: bkold and pold, Or just one read of pold if bkold was read into memory earlier
+        \item 2 writes: bknew and pnew
+    \end{itemize}
+\end{itemize}
+\subsection{Comparasion}
+\includegraphics[width=\textwidth]{RaidComparasion.png}
+\subsection{Conclusion}
+\begin{itemize}
+    \item RAID original purpose was to take advantage of commodity drives that were smaller and cheaper than conventional disk drives: Replace a single large drive by an array of smaller drives 
+    \item Nobody does that anymore! 
+    \item Today: Main purpose of RAID is to build fault-tolerant storage systems that do not need backups and deliver high throughput. 
+    \item Low cost of disk drives makes RAID-1 attractive for small installations, for we have now very cheap RAID controllers
+    \item Otherwise prefer \begin{itemize}
+        \item RAID-3 for simplicity 
+        \item RAID-5 for higher parallelism 
+    \end{itemize}
+    \item Often combined with NVRAM to improve write performance
+\end{itemize}
+
 \end{document}
