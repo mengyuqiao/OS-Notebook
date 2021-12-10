@@ -1,9 +1,9 @@
 # Fdb version 3
-["pdflatex"] 1639163948 "f:/Classes/OperatingSystem/OS-Notebook/Notebook.tex" "Notebook.pdf" "Notebook" 1639163958
-  "Notebook.aux" 1639163958 30850 260c4b7979b1d23f48d5e8b6303f0a46 "pdflatex"
-  "Notebook.out" 1639163958 38091 6ad6b154d4c1057fd40dbcb8b7644da0 "pdflatex"
-  "Notebook.tex" 1639163936 115770 be00dc423033b22d520cbbc5ac207acb ""
-  "Notebook.toc" 1639163958 20937 7722dbaef5366ae50a29fd1b3963132b "pdflatex"
+["pdflatex"] 1639164520 "f:/Classes/OperatingSystem/OS-Notebook/Notebook.tex" "Notebook.pdf" "Notebook" 1639164555
+  "Notebook.aux" 1639164529 31129 e5386134b3cbea1cd0ebc8d6076421cd "pdflatex"
+  "Notebook.out" 1639164529 38420 3fe508dad1985c9543ebd2a5542f6338 "pdflatex"
+  "Notebook.tex" 1639164554 116327 aaa299e67dc471a0de824b29dcdded85 ""
+  "Notebook.toc" 1639164529 21134 8efc1e578f145bab0bff1b87f680cd1e "pdflatex"
   "e:/Environment/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1632498248 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "e:/Environment/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1632500202 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "e:/Environment/texlive/2021/texmf-dist/fonts/tfm/jknappen/ec/tcrm1200.tfm" 1632499375 1536 74b7293ec3713bb7fdca8dd1bd1f469c ""
@@ -93,7 +93,7 @@
   "e:/Environment/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1632508486 4399753 569bde98fd14d20e0e849a5714e5e6a8 ""
   "e:/Environment/texlive/2021/texmf-var/web2c/pdftex/pdflatex.fmt" 1632508588 2798057 5b0dc6615c527196fcd08a881ed21cd9 ""
   "e:/Environment/texlive/2021/texmf.cnf" 1632508464 713 e69b156964470283e0530f5060668171 ""
-  "f:/Classes/OperatingSystem/OS-Notebook/Notebook.tex" 1639163936 115770 be00dc423033b22d520cbbc5ac207acb ""
+  "f:/Classes/OperatingSystem/OS-Notebook/Notebook.tex" 1639164554 116327 aaa299e67dc471a0de824b29dcdded85 ""
   "images//AddressSpaceSize.png" 1635441052 42022 ab301f7e02706f60304ae4cf3c4984b6 ""
   "images//AnotherViewOfUnixI-node.png" 1638393001 154369 0dca702b666b68fe58687884af52542d ""
   "images//ConcurrencyOverview.png" 1632707020 23400 2d44b12372407d03022f2357df13a8c0 ""
@@ -127,6 +127,7 @@
   "images//Multi-VMMigration.png" 1639159129 48557 1caf88f57cbce27c8c7e5fb7fbae4cd5 ""
   "images//MultiplexingThreads.png" 1632869761 72715 8323e64d4b965c3fe5ec06197ce9ef5e ""
   "images//MutualExclusionOverview.png" 1632761299 66136 9c5bae8c47af9f727f722623309247b7 ""
+  "images//NoReadUPNoWriteDOWN.png" 1639164031 65590 a44d696085332571e53d21a2c4072d88 ""
   "images//PCProblemMonitor.png" 1634663683 206320 320fae5483971c29e14ba8c924ee322f ""
   "images//PTE.png" 1635795970 65730 9280c2a22780c6e11fd293445ee6f4c8 ""
   "images//PageTable.png" 1635441486 134136 99da347071068f8f302d435330d0b2ec ""
@@ -179,8 +180,8 @@
   "images//WholeSystemVMs.png" 1639091136 91561 df1775c8ca9b4a9f82147c040eef115f ""
   "images//WhyDoWeNeedOS.png" 1632533529 33482 722254204e9634964dc4c3e0d70b2c55 ""
   (generated)
-  "Notebook.out"
   "Notebook.log"
-  "Notebook.pdf"
-  "Notebook.aux"
   "Notebook.toc"
+  "Notebook.pdf"
+  "Notebook.out"
+  "Notebook.aux"
