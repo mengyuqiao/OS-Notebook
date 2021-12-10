@@ -1956,4 +1956,516 @@ Every time a block is updated, the parity must be updated as well.
     \item Often combined with NVRAM to improve write performance
 \end{itemize}
 
+\section{Introduction to Virtual Machines}
+\subsection{Virtualization}
+\begin{itemize}
+    \item Makes a real system appear to be a set of virtual systems 
+    \item One-to-many virtualization \begin{itemize}
+        \item E.g. one physical machine may appear as multiple virtual Machines
+        \item one physical memory to many virtual memory
+        \item one physical CPU to many virtual CPU
+        \item one physical disk may look like multiple virtual disk
+        \item one physical network may look like multiple virtual networks
+    \end{itemize}
+    \item Many-to-one virtualization: Raid. Many physical machines/disks/networks may appear to look like one virtual machine/disk/network etc
+    \item Many-to-many virtualization: Extend the above statements
+\end{itemize}
+\subsection{Virtual Machines}
+\begin{itemize}
+    \item Logical/Emulated representations of full computing system environment \begin{itemize}
+        \item CPU + memory + I/O
+        \item Implemented by adding layers of software to the real machine to support the desired VM architecture.
+    \end{itemize}
+    \item Uses: \begin{itemize}
+        \item Multiple OSes on one machine, including legacy OSes
+        \item Isolation
+        \item Enhanced security
+        \item Live migration of servers
+        \item Virtual environment for testing and development
+        \item Platform emulation
+        \item On-the-fly optimization
+        \item Realizing ISAs not found in physical machines
+    \end{itemize}
+\end{itemize}
+\subsection{Interfaces of a computer system}
+\includegraphics[width=\textwidth]{InterfacesInComputerSystem.png}
+\begin{itemize}
+    \item User ISA: 7
+    \item System ISA: 8
+    \item Syscalls: 3
+    \item ABI: 3, 7
+    \item API: 2, 7
+\end{itemize}
+\subsection{Two Types of VMs}
+\subsubsection{Process VM}
+\begin{itemize}
+    \item Virtualizes the ABI
+    \item Virtualization software = Runtime
+    \item Runs in non-privileged mode (user space)
+    \item Performs binary translation.
+    \item Terminates when guest process terminates.
+\end{itemize}
+\includegraphics[width=0.8\textwidth]{ProcessVM.png}
+\subsubsection{System VM}
+\begin{itemize}
+    \item Virtualizes the ISA
+    \item Virtualization software = Hypervisor
+    \item Runs in privileged mode 
+    \item Traps and emulates privileged instructions
+\end{itemize}
+\includegraphics[width=0.8\textwidth]{SystemVM.png}
+\subsection{Process Virtual Machines}
+\begin{itemize}
+    \item Process in a multiprogramming OS \begin{itemize}
+        \item Standard OS syscall interface + instruction set
+        \item Multiple processes, each with its own address space and virtual machine view.
+    \end{itemize}
+    \item Emulators \begin{itemize}
+        \item Support one ISA on hardware designed for another ISA
+        \item Interpreter: Fetches, decodes and emulates individual instructions. Slow. like Python.
+        \item Dynamic Binary Translator: \begin{itemize}
+            \item Blocks of source instructions converted to target instructions.
+            \item Translated blocks cached to exploit locality.
+        \end{itemize}
+    \end{itemize}
+    \item Same ISA Binary Optimizers \begin{itemize}
+        \item Optimize code on the fly
+        \item Same as emulators except source and target ISAs are the same.
+    \end{itemize}
+    \item High-Level Language VMs \begin{itemize}
+        \item Virtual ISA (bytecode) designed for platform independence
+        \item Platform-dependent VM executes virtual ISA
+        \item E.g. Sun’s JVM and Microsoft’s CLI (part of .NET)
+        \item Both are stack-based VMs that run on register-based m/c
+    \end{itemize}
+\end{itemize}
+\includegraphics[width=0.4\textwidth]{ProcessVMExample.png}
+
+\subsection{System Virtual Machines}
+\subsubsection{Hypervisor}
+\begin{itemize}
+    \item Also called Virtual Machine Monitor (VMM)
+    \item A hypervisor is an operating system for operating systemsL I/O, multiplexing, protection \begin{itemize}
+        \item Key difference: Hypervisor is always transparant, it shouldn't let OS know if it's running on a hardware or a virtual machine
+        \item Provides a virtual execution environment for an entire OS and its applications
+        \item Controls access to hardware resources
+        \item Key feature: When guest OS executes a privileged instruction, Hypervisor intercepts the instruction, checks for correctness and emulates the instruction.
+    \end{itemize}
+\end{itemize}
+\includegraphics[width=0.4\textwidth]{Hypervisor.png}
+\subsubsection{Type 1 Hypervisors(Classical System VMs)}
+\begin{itemize}
+    \item Hypervisor executes natively on the host ISA
+    \item Hypervisor directly controls hardware and provides all device drivers
+    \item Hypervisor emulates sensitive instructions executed by the Guest OS
+    \item E.g. KVM(questionable) and VMWare ESX Server
+    \item Disadvantage: Big and Complex with device drivers
+\end{itemize}
+\includegraphics[width=0.4\textwidth]{HypervisorType1.png}
+\subsubsection{Type 2 Hypervisors (Hosted VMs)}
+\begin{itemize}
+    \item A host OS controls the hardware
+    \item The Hypervisor runs partly in process space and partly in the host kernel
+    \item Hypervisor Relies on host OS to provide drivers
+    \item E.g. VMWare Desktop Client, KVM
+    \item Disadvantage: inherited all the overheads of host OS
+\end{itemize}
+\includegraphics[width=0.4\textwidth]{HypervisorType2.png}
+\subsubsection{Para-virtualized VMs(can be type1 or type2)}
+\begin{itemize}
+    \item Modify guest OS for better performance: keep hypervisor transparant for most purposes, but for some performance sensitive reasons we make hypervisor visible by hyper calls to do I/O or memory virtualization.
+    \item Traditional Hypervisors provide full-virtualization \begin{itemize}
+        \item They expose to VMs virtual hardware that is functionally identical to the underlying physical hardware.
+        \item Advantage : allows unmodified guest OS to execute
+        \item Disadvantage: Sensitive instructions must be trapped and emulated by Hypervisor.
+        \item E.g. KVM and VMWare ESX provide full virtualization
+    \end{itemize}
+    \item Para-virtualized VM \begin{itemize}
+        \item Sees a virtual hardware abstraction that is similar, but not identical to the real hardware.
+        \item Guest OS is modified to replace sensitive instructions with “hypercalls” to the Hypervisor.
+        \item Advantage: Results in lower performance overhead 
+        \item Disadvantage: Needs modification to the guest OS.
+        \item E.g. Xen provides both para-virtual as well as full-virtualization
+    \end{itemize}
+    \item Often traditional Hypervisors are partially para-virtualizated: Device drivers in guest OS may be para-virtualized whereas CPU and Memory may be fully virtualized
+\end{itemize}
+\subsubsection{Whole System VMs: Emulation}
+\begin{itemize}
+    \item Host and Guest ISA are different
+    \item So emulation is required
+    \item Hosted VM + emulation 
+    \item E.g. Virtual PC (Windows on MAC)
+\end{itemize}
+\includegraphics[width=0.4\textwidth]{WholeSystemVMs.png}
+\subsubsection{Co-designed VMs}
+\begin{itemize}
+    \item The hypervisor is designed closely with (and possibly built into) a specific type of hardware ISA (or native ISA).
+    \item Goal: Performance improvement of existing ISA (or guest ISA) during runtime.
+    \item Hypervisor performs Emulation from Guest ISA to Native ISA.
+    \item E.g. Transmeta Crusoe \begin{itemize}
+        \item Native ISA based on VLIW
+        \item Guest ISA = x86
+        \item Goal power savings
+    \end{itemize}
+\end{itemize}
+\subsection{Taxonomy}
+\includegraphics[width=\textwidth]{Taxonomy.png}
+\subsection{Versatility}
+\includegraphics[width=0.4\textwidth]{Versatility.png}
+
+\subsection{Virtualizing individual resources in System VMs}
+\subsubsection{CPU Virtualization for VMs}
+Host VM(KVM)
+\begin{itemize}
+    \item Each VM sees a set of “virtual CPUs”
+    \item QEMU(a user process) would create the guest OS, then make a regular place within process whenever create as many threads as the number of virtual cpu. Each of the threads would become a virtual cpu for the guest OS. \begin{itemize}
+        \item these threads switch between guest mode and root mode, and it's the most cost for virtualization
+        \item guest mode $\rightarrow$ root mode: VM exit, it's a trap
+        \item root mode $\rightarrow$ guest mode: VM entry
+    \end{itemize}
+    \item Hypervisors must emulate privileged instructions issued by guest OS.
+    \item Modern ISAs provide special interfaces for Hypervisors to run VMs \begin{itemize}
+        \item Intel provides the VTx interface
+        \item AMD provides the AMD-v interface
+    \end{itemize}
+    \item These special ISA interfaces allow the Hypervisors to efficiently emulate privileged instructions executed by the guest OS.
+    \item When guest OS executes a privileged instruction \begin{itemize}
+        \item Hardware traps the instruction to the hypervisor
+        \item Hypervisor checks whether instruction must be emulated.
+        \item If so, Hypervisor reproduces the effect of privileged operation.
+    \end{itemize}
+\end{itemize}
+\subsubsection{Execution of Privileged Instruction by Guest}
+\includegraphics[width=\textwidth]{ExecutionOfPrivilegedInstructionbyGuest.png}
+Dispatcher:  the enter point for hypervisor
+\subsubsection{Resource Control}
+\begin{itemize}
+    \item Issue: How to retain control of resources in the Hypervisor?
+    \item Interrupt: Timer(LAPIC) interval control performed by Hypervisor
+    \item Also, guest OS is not allowed to read the timer value: Guest OS sees a virtual interval timer
+    \item Hypervisor also gains control whenever guest OS executes privileged instructions
+\end{itemize}
+\includegraphics[width=\textwidth]{ResourceControl.png}
+\subsubsection{Memory Virtualization for VMs}
+\includegraphics[width=\textwidth]{MemoryVirtualizationforVMs.png}
+\begin{itemize}
+    \item Guest OS in each VM sees a “guest”-physical address (GPA) space instead of the physical addresses
+    \item Often hardware supports two-level page tables: EPT in Intel VT-x and NPT in AMD-v
+    \item When hardware doesn't, then Hypervisor needs to emulate two-level page tables using "shadow page tables".
+\end{itemize}
+\subsubsection{I/O Virtualization for VMs}
+\begin{itemize}
+    \item Hypervisor provides a virtual version of each physical device
+    \item I/O activity directed at the virtual device is trapped by Hypervisor and converted to equivalent request for the physical device.
+    \item Options: \begin{itemize}
+        \item Device emulation \begin{itemize}
+            \item Hypervisor traps and emulates each I/O instruction from Guest in Hypervisor. 
+            \item Very slow.
+            \item Difficult to emulate the effect of combinations of I/O instructions
+        \end{itemize}
+        \item Para-virtual devices \begin{itemize}
+            \item Special device drivers inserted in guest OS to talk to Hypervisor. 
+            \item Most common
+        \end{itemize}
+        \item Direct device access \begin{itemize}
+            \item Allow the VM to directly access physical device. 
+            \item Fastest option but not scalable.
+            \item Requires IOMMU(protection) and VT-d support from hardware
+        \end{itemize}
+    \end{itemize}
+\end{itemize}
+
+\section{Live Migration of Virtual Machines}
+\subsection{What is live VM migration?}
+\includegraphics[width=0.6\textwidth]{LiveVMMigration.png}
+\begin{itemize}
+    \item Move a VM from one physical machine to another even as its applications continue to execute during migration
+    \item Live VM migration usually involves \begin{itemize}
+        \item Migrating memory state
+        \item Migrating CPU state
+        \item Optionally, migrating virtual disk state
+    \end{itemize}
+    \item Migration managers at source and destination \begin{itemize}
+        \item Connect via TCP connection
+        \item At source, the migration manager maps the guest VM's memory and execution state
+        \item Transfers VM's pages to the target migration manager over TCP connection.
+        \item At destination, the migration manager restores the VM's state and resumes execution
+        \item Migration manager examples: xend for Xen, QEMU for KVM
+    \end{itemize}
+\end{itemize}
+\subsection{Why Live VM Migration?}
+Why Migrate?
+\begin{itemize}
+    \item Load Balancing: Move VMs from highly loaded servers to lightly loaded servers
+    \item Server maintenance: When server needs to be upgraded
+    \item Energy savings: Move out VMs before shutting down servers to reduce energy usage
+\end{itemize}
+Why live?
+\begin{itemize}
+    \item To keep long-running jobs alive 
+    \item To keep network connections alive
+    \item Broadly, to avoid disruptions to users of VM
+\end{itemize}
+Why VM?
+\begin{itemize}
+    \item Why not migrate individual processes?
+    \item Process migration is very messy, and may leave residual dependencies (state) at source host. E.g. system call redirection, shared memory, open files, inter-process communication, etc
+\end{itemize}
+\subsection{Performance Goals in Live Migration}
+\begin{itemize}
+    \item Minimizing Downtime
+    \item Reducing total migration time
+    \item Avoiding interference with normal system activity
+    \item Minimizing network activity
+\end{itemize}
+\subsection{Migrating Memory}
+\subsubsection{Pure stop-and-copy/Non-live migration}
+\begin{itemize}
+    \item Freeze VM at source, 
+    \item Copy the VM's pseudo-physical memory contents to target, 
+    \item Restart VM at target
+    \item Longest downtime.
+    \item Fastest migration: Minimal total migration time = downtime
+\end{itemize}
+\subsubsection{Pure Demand Paging}
+\begin{itemize}
+    \item Freeze VM at source, 
+    \item Copy minimal execution context to target: PC, Registers, non-pageable memory
+    \item Restart VM at target, 
+    \item Pull memory contents form source as and when needed by destination hypervisor and source hypervisor
+    \item Smaller downtime 
+    \item Sloooow warm-up phase at target during page-faults across network
+\end{itemize}
+\subsubsection{Pre-copy migration}
+\includegraphics[width=0.6\textwidth]{Pre-copyMigration.png}
+\begin{itemize}
+    \item DON'T freeze VM at source: Let the VM continue to run
+    \item Copy VM's pseudo-physical memory contents to target over multiple iterations \begin{itemize}
+        \item First iteration $\to$ copy all pages.
+        \item Each subsequent iteration $\to$ copy pages that were dirtied by the VM during the previous iteration
+    \end{itemize}
+    \item Do a short stop-and-copy when number of dirty pages is “small enough”.
+    \item But what if number of dirty pages never converges to a small enough number? After a fixed number of iterations, give up and stop-and-copy
+    \item Not good for write-intensive applications
+\end{itemize}
+So what's the catch? How do we track dirtied pages?
+\begin{itemize}
+    \item Mark the VM's memory pages as read-only after each iteration.
+    \item Trap write operations via hypervisor to xend and track dirtied pages.
+    \item Reset after each iteration
+    \item Works well as long as writes are infrequent
+\end{itemize}
+Optimizations
+\begin{itemize}
+    \item Limit the bandwidth used by migration: To minimize impact on running services
+    \item Stun Rogue Processes: Those that don't stop dirtying memory
+    \item Free Page Cache Pages \begin{itemize}
+        \item Can be re-cached at target
+        \item Potential performance hit
+    \end{itemize}
+\end{itemize}
+\subsubsection{Post-copy migration}
+\includegraphics[width=0.6\textwidth]{Post-copyMigration.png}
+\begin{itemize}
+    \item Freeze the VM first
+    \item Migrate CPU state and minimum state to destination
+    \item Start VM at the target, but without its memory!
+    \item Transfer memory by concurrently doing the following \begin{itemize}
+        \item Demand paging over network
+        \item Actively pushing from source
+        \item Hopefully most pages will be pushed BEFORE they are demand paged.
+    \end{itemize}
+    \item Advantage: \begin{itemize}
+        \item Each page transferred over the network only once.
+        \item Deterministic total migration time
+    \end{itemize}
+    \item Disadvantage: \begin{itemize}
+        \item Cold start penalty at the destination
+        \item If migration fails, then VM is lost
+    \end{itemize}
+\end{itemize}
+\subsubsection{Hybrid pre/post-copy}
+\includegraphics[width=0.6\textwidth]{HybridPreAndPost-copy.png}
+Combines the benefits and drawbacks of both
+\begin{enumerate}
+    \item Perform one or more rounds of live pre-copy rounds
+    \item Pause VM and transfer execution state
+    \item Use post-copy to transfer any remaining dirty pages from source
+\end{enumerate}
+\subsection{Migrating Network Connections}
+\subsubsection{Within a LAN}
+\begin{itemize}
+    \item the migrated VM carries its IP address, MAC address, and all protocol state, including any open sockets
+    \item Backward (re)learning(Transparant bridging) delay at the network switches \begin{itemize}
+        \item Switches needs to re-learn the new location of migrated VMs MAC address
+        \item Solution: Send an unsolicited ARP reply from the target host.
+        \item Intermediate switches will re-learn automatically.
+        \item Few in-flight packets might get lost
+    \end{itemize}
+\end{itemize}
+\subsubsection{Across a WAN}
+\begin{itemize}
+    \item Source and destination subnets may have different IP addresses.
+    \item Active network connections may need to be tunneled via VPN or similar mechanisms
+\end{itemize}
+\subsection{Storage Migration}
+\begin{itemize}
+    \item Many gigabytes of local disk image possible.
+    \item For LAN \begin{itemize}
+        \item Assume the storage is over the network and remains accessible from the new target machine.
+        \item E.g. Network File System (NFS), or Network Block Device(NBD), or iSCSI etc.
+    \end{itemize}
+    \item For WAN \begin{itemize}
+        \item Disk image may need to be transferred.
+        \item Can use pre-copy or post-copy for disk images
+        \item Combined bandwidth saving optimizations such as compression, and/or de-duplication.
+    \end{itemize}
+\end{itemize}
+\subsection{Scatter-Gather migration}
+\includegraphics[width=0.8\textwidth]{Scatter-GatherMigration.png}
+Scatter-Gather migration: The VM's state is transferred through intermediaries. A direct connection between the source and destination carries control information, faulted pages, and some actively pushed pages
+\subsection{Multi-VM (Gang) Migration}
+\includegraphics[width=0.8\textwidth]{Multi-VMMigration.png}
+\begin{itemize}
+    \item De-duplicate memory pages to reduce network traffic.
+    \item Identify identical pages across multiple VMs: By comparing byte-wise (expensive), or checksum (cheaper)
+    \item Send only one copy of identical page to destination node
+    \item Destination Node replicates the pages to multiple VMs
+\end{itemize}
+
+\section{Operating Systemand Security}
+\subsection{What is Security}
+\includegraphics[width=0.6\textwidth]{WhatisSecurity.png}
+Preventing unauthorized users from executing undesirable actions, such as \begin{itemize}
+    \item Stealing your data (C)
+    \item Giving you fake data/Tampering your data (I)
+    \item Preventing you from doing your work (A)
+\end{itemize}
+\subsection{Securing what? From what?}
+\begin{itemize}
+    \item Securing the OS from users: OS-level mechanisms
+    \item Securing one user from another: Access control, isolation
+    \item Securing users from OS! Yes, sometimes the OS is not trusted by the user. E.g. in a cloud users may not trust the cloud platform's OS.
+\end{itemize}
+% \subsection{Reference Monitor and Trusted Computing Base}
+% \includegraphics[width=0.6\textwidth]{ReferenceMonitorandTrustedComputing.png}
+% \begin{itemize}
+%     \item A reference monitor, enforces access control/capabilities. also called "security kernel"
+%     \item Its “trusted” because it MUST work correctly to ensure that rest of the system is secure.
+%     \item Usually small, so it can be verified easily.
+%     \item Verification: either manual or automated. Hard either way
+% \end{itemize}
+\subsection{Security mechanisms in OS and hardware}
+\begin{itemize}
+    \item CPU Execution privileges (“Who can access?”) \begin{itemize}
+        \item Part of CPU state
+        \item x86 privilege rings (0,1,2,3) in EFLAGS
+        \item VTx provides root and non-root modes for virtualization because 0123 is not enough for hypervisor. So hypervisor has a root-mode 0123.
+    \end{itemize}
+    \item Memory protection (“What can be accessed?”) \begin{itemize}
+        \item Protection bits in segment descriptors
+        \item Protection bits in page-table registers
+        \item Virtual Memory (naming)
+    \end{itemize}
+    \item File system privileges (“What can be accessed?”) \begin{itemize}
+        \item User accounts
+        \item Access permissions
+    \end{itemize}
+\end{itemize}
+\subsection{Common Motivations of Intruders}
+\begin{enumerate}
+    \item Peeping Tom: Casual prying by nontechnical users
+    \item Insider threat: Disgruntled insiders, programmers backdoor
+    \item Extortion: Make money
+    \item Espionage/Intelligence gathering: Commercial or military or government
+    \item Hacktivism: Political or social motivation
+    \item Sometimes motivations may overlap: Was Snowden incident 2? 4? 5? All?
+\end{enumerate}
+\subsection{User Authentication}
+\begin{itemize}
+    \item Verifying that you are who you claim you are.
+    \item File permissions and user's rights are set according to user's identity, which is established by authentication.
+    \item Basic Principles. Authentication must identify: \begin{itemize}
+        \item Something the user knows
+        \item Something the user has
+        \item Something the user is
+    \end{itemize}
+    \item This is done before user can use the system
+\end{itemize}
+\subsection{Login Spoofing}
+\includegraphics[width=\textwidth]{LoginSpoofing.png}
+Countermeasures:
+\begin{itemize}
+    \item Careful user can intentionally enter a fake password the first (few) time(s).
+    \item Use "Trusted Path" \begin{itemize}
+        \item A sequence of user actions that is guaranteed to give control to the OS
+        \item E.g. pressing Ctrl-Alt-Del could guarantee that legitimate login (or logout) screen will show up
+    \end{itemize}
+\end{itemize}
+\subsection{Buffer Overflow}
+\subsection{Memory reuse — Dumpster Diving}
+\begin{itemize}
+    \item Request memory, disk space, tapes
+    \item Don't write. Just read and interpret existing data.
+    \item May find passwords, ssh keys, emails, personal information, browsing history, etc
+    \item CM: \begin{itemize}
+        \item Scrub memory/storage before allocating to user. 
+        \item Encrypt data. Throw away the key once done.
+        \item Disadvantage: Takes more time
+    \end{itemize}
+\end{itemize}
+\subsection{Logging}
+\begin{itemize}
+    \item Logs: A time-wise record of system activity. Events always appended. “Never” erased.
+    \item Logs must be analyzed often to detect suspect activity
+    \item What to log? \begin{itemize}
+        \item Too much logging \begin{itemize}
+            \item takes up storage
+            \item slows down normal operations. 
+            \item Slows down analysis.
+        \end{itemize}
+        \item Too little logging and you miss critical events.
+    \end{itemize}
+    \item Privacy risk \begin{itemize}
+        \item Can break laws. 
+        \item Or violate user's perception of privacy. (sometimes more important.)
+    \end{itemize}
+\end{itemize}
+\subsection{Access control}
+\begin{itemize}
+    \item Discretionary access control (DAC) \begin{itemize}
+        \item "John can access X. Alice can do Y."
+        \item Commodity systems
+    \end{itemize}
+    \item Mandatory access control (MAC) (Multi-level Security) \begin{itemize}
+        \item Military/spy systems 
+        \item More later
+    \end{itemize}
+    \item Role-based access control (RBAC) \begin{itemize}
+        \item "CEO can do X. Software Engineer can do Y. Secretary can do Z".
+        \item Enterprise systems
+    \end{itemize}
+    \item Administrative Role-based Access Control. "Dean can allow department chair to do X. Dept chair can allow secretary to do Y"
+\end{itemize}
+\subsection{Multi-level Security}
+\begin{itemize}
+    \item Also called Mandatory Access Control (MAC): As opposed to Discretionary Access Control (DAC) in commodity systems.
+    \item Data objects are classified at different levels \begin{itemize}
+        \item Top secret, secret, confidential, unclassified etc
+        \item Sometimes additional compartments: Crypto, Subs, NoForn
+    \end{itemize}
+    \item People (and computers) have clearances
+    \item Informally: To see a data object, you must have clearance for that level and for that compartment
+\end{itemize}
+\subsubsection{No Read UP, No Write DOWN}
+\includegraphics[width=\textwidth]{NoReadUPNoWriteDOWN.png}
+\subsubsection{MLS Pump}
+\begin{itemize}
+    \item In practice, to get things done, upper-level must at least acknowledge the receipt of data from lower level, But acks create a backdoor for covert channels (surreptitious communication)
+    \item An MLS Pump \begin{itemize}
+        \item Allows acks from higher to lower levels, 
+        \item but at such a low data rate that covert channels become impractical
+    \end{itemize}
+\end{itemize}
+
 \end{document}
