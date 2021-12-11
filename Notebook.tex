@@ -1712,8 +1712,8 @@ VFS provides
     \item Metadata = file info + location of data blocks 
     \item i-nodes are stored on the disk 
     \item An i-node is to a file what a page-table is to a virtual address space \begin{itemize}
-        \item Page table maps: virtual page number in a virtual address space ——> physical page frame number in DRAM 
-        \item i-node maps: logical block number in a file ——> physical block location on disk
+        \item Page table maps: virtual page number in a virtual address space $\to$ physical page frame number in DRAM 
+        \item i-node maps: logical block number in a file $\to$ physical block location on disk
     \end{itemize}
 \end{itemize}
 \subsubsection{Unix i-node (index node)}
@@ -1790,14 +1790,14 @@ VFS provides
 \begin{itemize}
     \item Triggered upon login by the init process 
     \item Can be replaced by other commands: command arg1 arg2 • • - argn 
-    \item ls > there 
-    \item ed < script 
-    \item Filters: ls | grep foo | wc -l 
+    \item ls $>$ there 
+    \item ed $>$ script 
+    \item Filters: ls $|$ grep foo $|$ wc -l 
     \item Multitasking \begin{itemize}
         \item ls; ed
-        \item as source > output \&
-        \item as source > output \& ls > files \&
-        \item (date; ls) > x \&
+        \item as source $>$ output \&
+        \item as source $>$ output \& ls $>$ files \&
+        \item (date; ls) $>$ x \&
     \end{itemize}
 \end{itemize}
 \subsubsection{read/write buffering}
@@ -2467,5 +2467,8 @@ Countermeasures:
         \item but at such a low data rate that covert channels become impractical
     \end{itemize}
 \end{itemize}
+
+\section{I/O Models}
+
 
 \end{document}
